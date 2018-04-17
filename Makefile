@@ -7,6 +7,7 @@ RM	= rm -f
 SRCS	= ./src/classes/Task.cpp \
 	  ./src/classes/Worker.cpp \
 	  ./src/classes/Slave.cpp \
+	  ./src/classes/SlavePool.cpp \
 	  ./src/main.cpp 
 
 OBJS	= $(SRCS:.cpp=.o)

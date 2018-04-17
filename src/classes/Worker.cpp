@@ -7,11 +7,9 @@
 
 #include "Worker.hpp"
 
-Plazza::Worker::Worker()
-	: _tasks()
-	, _isWorking(false)
-	, _isRunning(false)
-{}
+Plazza::Worker::Worker() : _tasks(), _isWorking(false), _isRunning(false)
+{
+}
 
 Plazza::Worker::~Worker()
 {
@@ -63,10 +61,10 @@ void Plazza::Worker::_run()
 			_threadCond.wait(lk);
 		}
 		if (_tasks.empty())
-			continue ;
+			continue;
 		auto task = _tasks.front();
 		if (task.getType() == Plazza::Task::Type::EXIT)
-			break ;
+			break;
 		_isWorking = true;
 		_parse();
 		_tasks.pop();

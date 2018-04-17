@@ -7,11 +7,18 @@
 
 #pragma once
 
-class SlavePool {
-	public:
-		SlavePool();
-		~SlavePool();
+#include "Slave.hpp"
 
-	protected:
-	private:
+namespace Plazza {
+	class SlavePool {
+		public:
+			SlavePool();
+			~SlavePool();
+
+			void pushTask(Task &);
+			Slave &getBestSlave();
+		protected:
+		private:
+			std::vector<Slave> _slaves;
+	};
 };
