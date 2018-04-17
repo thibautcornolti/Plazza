@@ -19,6 +19,11 @@ Plazza::Worker::~Worker()
 	join();
 }
 
+unsigned Plazza::Worker::getLoad()
+{
+	return _tasks.size();
+}
+
 bool Plazza::Worker::isWorking()
 {
 	return _isWorking;
@@ -62,9 +67,9 @@ void Plazza::Worker::_run()
 		auto task = _tasks.front();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break ;
-		_tasks.pop();
 		_isWorking = true;
 		_parse();
+		_tasks.pop();
 		_isWorking = false;
 	}
 	std::cout << "Thread finished" << std::endl;

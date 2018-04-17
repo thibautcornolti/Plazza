@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Task.hpp"
+#include "Worker.hpp"
 
 namespace Plazza {
 	class Slave {
@@ -16,9 +17,13 @@ namespace Plazza {
 			~Slave();
 
 			void pushTask(Task &);
+			unsigned getLoad();
 
 		protected:
 		private:
-			unsigned int _threadCount;
+			Worker &getBestWorker();
+
+			unsigned int _workerCount;
+			std::vector<Worker> _workers;
 	};
 };

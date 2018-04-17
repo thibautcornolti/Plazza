@@ -21,6 +21,7 @@ namespace Plazza {
 
 			bool isWorking();
 			bool isRunning();
+			unsigned getLoad();
 			void join();
 			void pushTask(const Task &);
 
