@@ -51,7 +51,6 @@ void Plazza::Worker::join()
 void Plazza::Worker::_run()
 {
 	std::cout << "Thread started" << std::endl;
-
 	while (1) {
 		if (_tasks.empty()) {
 			std::mutex m;
@@ -68,7 +67,6 @@ void Plazza::Worker::_run()
 		_parse();
 		_isWorking = false;
 	}
-
 	std::cout << "Thread finished" << std::endl;
 }
 

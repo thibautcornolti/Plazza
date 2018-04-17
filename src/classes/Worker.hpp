@@ -10,8 +10,6 @@
 #include <queue>
 #include <thread>
 #include <condition_variable>
-#include <chrono>
-#include <ctime>
 #include <iostream>
 #include "Task.hpp"
 
@@ -24,7 +22,8 @@ namespace Plazza {
 			bool isWorking();
 			bool isRunning();
 			void join();
-			void pushTask(const Plazza::Task &);
+			void pushTask(const Task &);
+
 		protected:
 		private:
 			void _run();

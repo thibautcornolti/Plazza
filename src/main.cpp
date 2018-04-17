@@ -8,17 +8,18 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
-#include "classes/Worker.hpp"
+#include "classes/Task.hpp"
+#include "classes/Slave.hpp"
 
 int main(void)
 {
-	Plazza::Worker worker;
+	Plazza::Slave slave(3);
 	Plazza::Task task(Plazza::Task::SCRAP);
 	Plazza::Task taske(Plazza::Task::EXIT);
 
-	worker.pushTask(task);
-	worker.pushTask(task);
-	worker.pushTask(task);
-	worker.pushTask(task);
+	slave.pushTask(task);
+	slave.pushTask(task);
+	slave.pushTask(task);
+	slave.pushTask(task);
 	return (EXIT_SUCCESS);
 }

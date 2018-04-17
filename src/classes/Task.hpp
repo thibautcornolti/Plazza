@@ -20,6 +20,7 @@ namespace Plazza {
 			~Task();
 
 			Type getType();
+
 		protected:
 		private:
 			Type _type;
