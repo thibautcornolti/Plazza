@@ -5,21 +5,26 @@
 ** plazza
 */
 
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <thread>
-#include "classes/Task.hpp"
+
+#include "classes/Parser.hpp"
 #include "classes/Slave.hpp"
+#include "classes/Task.hpp"
+#include "classes/Worker.hpp"
 
-int main(void)
+int main(int ac, char **av)
 {
-	Plazza::Slave slave(3);
-	Plazza::Task task(Plazza::Task::SCRAP);
-	Plazza::Task taske(Plazza::Task::EXIT);
+	if (ac > 2)
+		return 84;
+	Plazza::Parser p;
+	bool hasTasks = true;
 
-	slave.pushTask(task);
-	slave.pushTask(task);
-	slave.pushTask(task);
-	slave.pushTask(task);
+	while (hasTasks) {
+		auto task = p.getNextTask();
+		hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
+		std::cout << task << std::endl;
+	}
 	return (EXIT_SUCCESS);
 }
