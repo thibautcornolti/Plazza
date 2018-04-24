@@ -34,6 +34,7 @@ bool Plazza::Worker::isRunning()
 
 void Plazza::Worker::pushTask(const Plazza::Task &task)
 {
+	_isWorking = true;
 	_tasks.push(task);
 	if (!_isRunning) {
 		join();
@@ -53,9 +54,10 @@ void Plazza::Worker::join()
 
 void Plazza::Worker::_run()
 {
-	std::cout << "Thread started" << std::endl;
+	printf("[WORKER] Thread started\n");
 	while (1) {
 		if (_tasks.empty()) {
+			_isWorking = false;
 			std::mutex m;
 			std::unique_lock<std::mutex> lk(m);
 			_threadCond.wait(lk);
@@ -65,16 +67,15 @@ void Plazza::Worker::_run()
 		auto task = _tasks.front();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
-		_isWorking = true;
 		_parse();
 		_tasks.pop();
-		_isWorking = false;
 	}
-	std::cout << "Thread finished" << std::endl;
+	printf("[WORKER] Thread finished\n");
 }
 
+#include <unistd.h>
 void Plazza::Worker::_parse()
 {
-	std::cout << "Thread is working" << std::endl;
-	std::cout << "Thread is not working anymore" << std::endl;
+	printf("[WORKER] Thread is working\n");
+	printf("[WORKER] Thread is not working anymore\n");
 }

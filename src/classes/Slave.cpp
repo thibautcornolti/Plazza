@@ -35,10 +35,26 @@ Plazza::Worker &Plazza::Slave::getBestWorker()
 			minWorker = i;
 			minLoad = _workers[i].getLoad();
 		}
+	printf("[SLAVE] Using worker %d (with load %d)\n", minWorker, minLoad);
 	return _workers[minWorker];
 }
 
 void Plazza::Slave::pushTask(Plazza::Task &task)
 {
+	printf("[SLAVE] Available power %d\n", getAvailablePower());
 	getBestWorker().pushTask(task);
+}
+
+unsigned Plazza::Slave::getTotalPower()
+{
+	return _workers.size();
+}
+
+unsigned Plazza::Slave::getAvailablePower()
+{
+	unsigned availablePower = 0;
+
+	for (auto &w : _workers)
+		availablePower += !w.isWorking();
+	return availablePower;
 }

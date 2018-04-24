@@ -9,17 +9,17 @@
 #include <chrono>
 #include <thread>
 #include "classes/Task.hpp"
-#include "classes/Slave.hpp"
+#include "classes/SlavePool.hpp"
 
 int main(void)
 {
-	Plazza::Slave slave(3);
+	Plazza::SlavePool pool(1);
 	Plazza::Task task(Plazza::Task::SCRAP);
 	Plazza::Task taske(Plazza::Task::EXIT);
 
-	slave.pushTask(task);
-	slave.pushTask(task);
-	slave.pushTask(task);
-	slave.pushTask(task);
+	pool.pushTask(task);
+	pool.pushTask(task);
+	pool.pushTask(task);
+	pool.pushTask(task);
 	return (EXIT_SUCCESS);
 }

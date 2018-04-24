@@ -18,6 +18,8 @@ namespace Plazza {
 
 			void pushTask(Task &);
 			unsigned getLoad();
+			unsigned getTotalPower();
+			unsigned getAvailablePower();
 
 		protected:
 		private:

@@ -7,18 +7,24 @@
 
 #pragma once
 
+#include <memory>
 #include "Slave.hpp"
 
 namespace Plazza {
 	class SlavePool {
 		public:
-			SlavePool();
+			SlavePool(unsigned);
 			~SlavePool();
 
 			void pushTask(Task &);
+			void createSlave();
 			Slave &getBestSlave();
+			unsigned getTotalPower();
+			unsigned getAvailablePower();
+
 		protected:
 		private:
-			std::vector<Slave> _slaves;
+			unsigned _workerCount;
+			std::vector<std::unique_ptr<Slave>> _slaves;
 	};
 };
