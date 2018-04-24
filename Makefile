@@ -7,13 +7,17 @@ RM	= rm -f
 SRCS	= ./src/classes/Task.cpp \
 	  ./src/classes/Worker.cpp \
 	  ./src/classes/Slave.cpp \
+	  ./src/classes/ForkedSlave.cpp \
 	  ./src/classes/SlavePool.cpp \
-	  ./src/main.cpp 
+	  ./src/classes/Parser.cpp \
+	  ./src/classes/Fork.cpp \
+	  ./src/classes/Socket.cpp \
+	  ./src/main.cpp
 
 OBJS	= $(SRCS:.cpp=.o)
 
 CPPFLAGS = -I ./src/classes/pp
-CPPFLAGS += -W -Wall -Wextra
+CPPFLAGS += -W -Wall -Wextra -std=c++14
 
 LDFLAGS += -pthread
 

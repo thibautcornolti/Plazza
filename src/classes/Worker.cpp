@@ -13,7 +13,8 @@ Plazza::Worker::Worker() : _tasks(), _isWorking(false), _isRunning(false)
 
 Plazza::Worker::~Worker()
 {
-	pushTask(Plazza::Task(Plazza::Task::EXIT));
+	pushTask(Plazza::Task(Plazza::Task::Type::EXIT, "",
+		Plazza::Task::Criteria::IP_ADDRESS));
 	join();
 }
 

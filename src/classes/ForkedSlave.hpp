@@ -9,14 +9,12 @@
 
 #include "Task.hpp"
 #include "Worker.hpp"
-#include "ForkedSlave.hpp"
-#include "Fork.hpp"
 
 namespace Plazza {
-	class Slave {
+	class ForkedSlave {
 		public:
-			Slave(unsigned);
-			~Slave();
+			ForkedSlave(unsigned);
+			~ForkedSlave();
 
 			void pushTask(Task &);
 			unsigned getLoad();
@@ -29,6 +27,5 @@ namespace Plazza {
 
 			unsigned int _workerCount;
 			std::vector<Worker> _workers;
-			Fork _fork;
 	};
 };

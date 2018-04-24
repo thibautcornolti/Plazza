@@ -5,22 +5,18 @@
 ** Plazza
 */
 
-#include "Slave.hpp"
+#include "ForkedSlave.hpp"
 
-Plazza::Slave::Slave(unsigned workerCount)
-	: _workerCount(workerCount), _workers(workerCount), _fork()
-{
-	if (_fork.isChild()) {
-		ForkedSlave(_workerCount*1U);
-		exit(0);
-	}
-}
-
-Plazza::Slave::~Slave()
+Plazza::ForkedSlave::ForkedSlave(unsigned workerCount)
+	: _workerCount(workerCount), _workers(workerCount)
 {
 }
 
-unsigned Plazza::Slave::getLoad()
+Plazza::ForkedSlave::~ForkedSlave()
+{
+}
+
+unsigned Plazza::ForkedSlave::getLoad()
 {
 	unsigned load = 0;
 
@@ -29,7 +25,7 @@ unsigned Plazza::Slave::getLoad()
 	return load;
 }
 
-Plazza::Worker &Plazza::Slave::getBestWorker()
+Plazza::Worker &Plazza::ForkedSlave::getBestWorker()
 {
 	unsigned minWorker = 0;
 	unsigned minLoad = _workers[0].getLoad();
@@ -39,22 +35,22 @@ Plazza::Worker &Plazza::Slave::getBestWorker()
 			minWorker = i;
 			minLoad = _workers[i].getLoad();
 		}
-	printf("[SLAVE] Using worker %d (with load %d)\n", minWorker, minLoad);
+	printf("[ForkedSlave] Using worker %d (with load %d)\n", minWorker, minLoad);
 	return _workers[minWorker];
 }
 
-void Plazza::Slave::pushTask(Plazza::Task &task)
+void Plazza::ForkedSlave::pushTask(Plazza::Task &task)
 {
-	printf("[SLAVE] Available power %d\n", getAvailablePower());
+	printf("[ForkedSlave] Available power %d\n", getAvailablePower());
 	getBestWorker().pushTask(task);
 }
 
-unsigned Plazza::Slave::getTotalPower()
+unsigned Plazza::ForkedSlave::getTotalPower()
 {
 	return _workers.size();
 }
 
-unsigned Plazza::Slave::getAvailablePower()
+unsigned Plazza::ForkedSlave::getAvailablePower()
 {
 	unsigned availablePower = 0;
 
