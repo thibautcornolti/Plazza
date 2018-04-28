@@ -8,7 +8,7 @@
 #include "SlavePool.hpp"
 
 Plazza::SlavePool::SlavePool(unsigned workerCount)
-	: _workerCount(workerCount), _slaves()
+	: _socket(), _workerCount(workerCount), _slaves()
 {
 }
 

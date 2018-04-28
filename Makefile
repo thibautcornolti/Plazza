@@ -1,37 +1,65 @@
-NAME	= plazza
+##
+## EPITECH PROJECT, 2018
+## cpp_plazza
+## File description:
+## Makefile
+##
 
-CC	= g++
+NAME	=	plazza
 
-RM	= rm -f
+CC	=	g++
 
-SRCS	= ./src/classes/Task.cpp \
-	  ./src/classes/Worker.cpp \
-	  ./src/classes/Slave.cpp \
-	  ./src/classes/ForkedSlave.cpp \
-	  ./src/classes/SlavePool.cpp \
-	  ./src/classes/Parser.cpp \
-	  ./src/classes/Fork.cpp \
-	  ./src/classes/Socket.cpp \
-	  ./src/main.cpp
+RM	=	rm -f
 
-OBJS	= $(SRCS:.cpp=.o)
+LIST	=	classes/Task			\
+		classes/Worker			\
+		classes/WorkerPool		\
+		classes/Slave			\
+		classes/SlavePool		\
+		classes/ForkedSlave		\
+		classes/Parser			\
+		classes/Fork			\
+		classes/socket/Socket		\
+		classes/socket/TCPSocket	\
+		classes/socket/ServerTCPSocket	\
+		classes/socket/ClientTCPSocket	\
+		main
 
-CPPFLAGS = -I ./src/classes/pp
-CPPFLAGS += -W -Wall -Wextra -std=c++14
+SRCDIR	=	src
+OBJDIR	=	build
 
-LDFLAGS += -pthread
+SORTED	=	$(sort $(LIST))
+SRCS	=	$(SORTED:%=$(SRCDIR)/%.cpp)
+OBJS	=	$(SORTED:%=$(OBJDIR)/%.o)
 
-all: $(NAME)
+CPPFLAGS	=	-I ./src/classes/
+CPPFLAGS	+=	-W -Wall -Wextra -std=c++14
 
-$(NAME): $(OBJS)
-	 $(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+LDFLAGS	+=	-pthread
+
+all:	$(OBJDIR)/classes/socket $(NAME)
+
+$(NAME):	$(OBJS)
+		$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
+
+$(OBJDIR)/%.o:	$(SRCDIR)/%.cpp
+		$(CC) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJDIR)/classes/socket:	$(OBJDIR)/classes
+			mkdir -p $(OBJDIR)/classes/socket
+
+$(OBJDIR)/classes:	$(OBJDIR)
+			mkdir -p $(OBJDIR)/classes
+
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
 clean:
-	$(RM) $(OBJS)
+	$(RM) -r $(OBJDIR)
 
-fclean: clean
+fclean:	clean
 	$(RM) $(NAME)
 
-re: fclean all
+re:	fclean all
 
-.PHONY: all clean fclean re
+.PHONY:	all clean fclean re

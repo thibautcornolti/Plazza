@@ -7,28 +7,30 @@
 
 #pragma once
 
-#include "Task.hpp"
-#include "Worker.hpp"
-#include "ForkedSlave.hpp"
 #include "Fork.hpp"
+#include "ForkedSlave.hpp"
+#include "Task.hpp"
+#include "TaskPusherizer.hpp"
+#include "Worker.hpp"
+#include "WorkerPool.hpp"
 
 namespace Plazza {
-	class Slave {
-		public:
-			Slave(unsigned);
-			~Slave();
+	class Slave : public TaskPusherizer {
+	public:
+		Slave(unsigned);
+		~Slave();
 
-			void pushTask(Task &);
-			unsigned getLoad();
-			unsigned getTotalPower();
-			unsigned getAvailablePower();
+		void pushTask(Task &);
+		unsigned getLoad();
+		unsigned getTotalPower();
+		unsigned getAvailablePower();
 
-		protected:
-		private:
-			Worker &getBestWorker();
+	protected:
+	private:
+		Worker &getBestWorker();
 
-			unsigned int _workerCount;
-			std::vector<Worker> _workers;
-			Fork _fork;
+		WorkerPool _pool;
+
+		Fork _fork;
 	};
 };

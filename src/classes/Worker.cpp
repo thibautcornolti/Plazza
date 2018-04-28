@@ -6,6 +6,7 @@
 */
 
 #include "Worker.hpp"
+#include <unistd.h>
 
 Plazza::Worker::Worker() : _tasks(), _isWorking(false), _isRunning(false)
 {
@@ -74,9 +75,9 @@ void Plazza::Worker::_run()
 	printf("[WORKER] Thread finished\n");
 }
 
-#include <unistd.h>
 void Plazza::Worker::_parse()
 {
 	printf("[WORKER] Thread is working\n");
+
 	printf("[WORKER] Thread is not working anymore\n");
 }

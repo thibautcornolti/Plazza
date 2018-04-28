@@ -17,7 +17,12 @@ namespace Plazza {
 			EXIT,
 			NOOP,
 		};
-		enum Criteria { PHONE_NUMBER, EMAIL_ADDRESS, IP_ADDRESS };
+		enum Criteria {
+			PHONE_NUMBER,
+			EMAIL_ADDRESS,
+			IP_ADDRESS,
+			CUSTOM
+		};
 
 		Task(Type, const std::string &, Criteria);
 		Task();

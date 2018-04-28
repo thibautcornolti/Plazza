@@ -13,20 +13,26 @@
 #include "classes/Parser.hpp"
 #include "classes/Task.hpp"
 #include "classes/Worker.hpp"
+#include "classes/socket/ClientTCPSocket.hpp"
 
 int main(int ac, char **av)
 {
-	if (ac > 2)
-		return 84;
-	Plazza::Parser p;
-	Plazza::SlavePool pool(1);
-	bool hasTasks = true;
+	// Plazza::Parser p;
+	// Plazza::SlavePool pool(1);
+	// bool hasTasks = true;
+	ClientTCPSocket socket("hirevo.eu", 4444);
 
-	while (hasTasks) {
-		auto task = p.getNextTask();
-		hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
-		std::cout << task << std::endl;
-		pool.pushTask(task);
-	}
-	return (EXIT_SUCCESS);
+	if (ac != 2)
+		return 84;
+	std::cout << socket.receive() << std::endl;
+	socket.send("user anonymous\r\n");
+	std::cout << socket.receive() << std::endl;
+	socket.close();
+	// while (hasTasks) {
+	// 	auto task = p.getNextTask();
+	// 	std::cout << task << std::endl;
+	// 	pool.pushTask(task);
+	// 	hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
+	// }
+	return 0;
 }
