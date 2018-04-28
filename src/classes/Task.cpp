@@ -48,6 +48,21 @@ Plazza::Task::Criteria Plazza::Task::getCriteria() const
 	return _criteria;
 }
 
+void Plazza::Task::setType(Plazza::Task::Type type)
+{
+	_type = type;
+}
+
+void Plazza::Task::setFile(const std::string &file)
+{
+	_file = file;
+}
+
+void Plazza::Task::setCriteria(Plazza::Task::Criteria criteria)
+{
+	_criteria = criteria;
+}
+
 std::ostream &operator<<(std::ostream &s, const Plazza::Task &task)
 {
 	std::map<Plazza::Task::Type, std::string> type{
@@ -66,4 +81,29 @@ std::ostream &operator<<(std::ostream &s, const Plazza::Task &task)
 	}
 	s << ">";
 	return s;
+}
+
+Plazza::Task &operator>>(std::istream &s, Plazza::Task &task)
+{
+	std::map<std::string, Plazza::Task::Type> type{
+		{"Scrap", Plazza::Task::Type::SCRAP},
+		{"Exit>", Plazza::Task::Type::EXIT},
+		{"No-op>", Plazza::Task::Type::NOOP}};
+	std::map<std::string, Plazza::Task::Criteria> crit{
+		{"IP_ADDRESS>", Plazza::Task::Criteria::IP_ADDRESS},
+		{"PHONE_NUMBER>", Plazza::Task::Criteria::PHONE_NUMBER},
+		{"EMAIL_ADDRESS>", Plazza::Task::Criteria::EMAIL_ADDRESS}};
+	std::string out;
+	s >> out;
+	if (out == "<Task") {
+		s >> out;
+		task.setType(type.at(out));
+		if (task.getType() == Plazza::Task::Type::SCRAP) {
+			s >> out;
+			task.setFile(out);
+			s >> out;
+			task.setCriteria(crit.at(out));
+		}
+	}
+	return task;
 }

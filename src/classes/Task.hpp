@@ -34,6 +34,10 @@ namespace Plazza {
 		const std::string &getFile() const;
 		Criteria getCriteria() const;
 
+		void setType(Type type);
+		void setFile(const std::string &file);
+		void setCriteria(Criteria criteria);
+
 	protected:
 	private:
 		Type _type;
@@ -43,3 +47,4 @@ namespace Plazza {
 };
 
 std::ostream &operator<<(std::ostream &s, const Plazza::Task &);
+Plazza::Task &operator>>(std::istream &s, Plazza::Task &);
