@@ -28,7 +28,7 @@ namespace Plazza {
 	protected:
 	private:
 		void _run();
-		void _parse();
+		void _parse(Plazza::Task &);
 
 		std::thread _thread;
 		std::condition_variable _threadCond;

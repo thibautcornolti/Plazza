@@ -69,15 +69,15 @@ void Plazza::Worker::_run()
 		auto task = _tasks.front();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
-		_parse();
+		_parse(task);
 		_tasks.pop();
 	}
 	printf("[WORKER] Thread finished\n");
 }
 
-void Plazza::Worker::_parse()
+void Plazza::Worker::_parse(Plazza::Task &task)
 {
 	printf("[WORKER] Thread is working\n");
-
+	
 	printf("[WORKER] Thread is not working anymore\n");
 }
