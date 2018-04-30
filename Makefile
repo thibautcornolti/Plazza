@@ -11,20 +11,24 @@ CC	=	g++
 
 RM	=	rm -f
 
-LIST	=	classes/Task			\
-		classes/Worker			\
-		classes/WorkerPool		\
-		classes/Slave			\
-		classes/SlavePool		\
-		classes/ForkedSlave		\
-		classes/Parser			\
-		classes/Fork			\
-		classes/UserInterface	\
-		classes/WebServer		\
-		classes/socket/Socket		\
-		classes/socket/TCPSocket	\
+LIST	=	classes/Task				\
+		classes/Worker					\
+		classes/WorkerPool				\
+		classes/WorkerOutputHandler		\
+		classes/Slave					\
+		classes/SlavePool				\
+		classes/ForkedSlave				\
+		classes/Parser					\
+		classes/Fork					\
+		classes/UserInterface			\
+		classes/WebServer				\
+		classes/socket/Socket			\
+		classes/socket/TCPSocket		\
 		classes/socket/ServerTCPSocket	\
 		classes/socket/ClientTCPSocket	\
+		classes/socket/UnixSocket		\
+		classes/socket/ServerUnixSocket	\
+		classes/socket/ClientUnixSocket	\
 		main
 
 SRCDIR	=	src
