@@ -19,6 +19,8 @@ LIST	=	classes/Task			\
 		classes/ForkedSlave		\
 		classes/Parser			\
 		classes/Fork			\
+		classes/UserInterface		\
+		classes/WebServer		\
 		classes/socket/Socket		\
 		classes/socket/TCPSocket	\
 		classes/socket/ServerTCPSocket	\
@@ -33,11 +35,11 @@ SRCS	=	$(SORTED:%=$(SRCDIR)/%.cpp)
 OBJS	=	$(SORTED:%=$(OBJDIR)/%.o)
 
 CPPFLAGS	=	-I ./src/classes/
-CPPFLAGS	+=	-W -Wall -Wextra -std=c++14
+CPPFLAGS	+=	-W -Wall -Wextra -std=c++14 -g
 
 LDFLAGS	+=	-pthread
 
-all:	$(OBJDIR)/classes/socket $(NAME)
+ui:	$(OBJDIR)/classes/socket $(NAME)
 
 $(NAME):	$(OBJS)
 		$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
@@ -60,6 +62,6 @@ clean:
 fclean:	clean
 	$(RM) $(NAME)
 
-re:	fclean all
+re:	fclean ui
 
-.PHONY:	all clean fclean re
+.PHONY:	ui clean fclean re

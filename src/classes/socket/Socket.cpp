@@ -13,8 +13,10 @@
 #include <unistd.h>
 
 Socket::Socket(int domain, int type, int protocol)
-	: _socket(socket(domain, type, protocol))
+	: _socket(::socket(domain, type, protocol))
 {
+	if (_socket < 0)
+		throw std::exception();
 }
 
 Socket::Socket(int fd) : _socket(fd)
@@ -42,10 +44,11 @@ bool Socket::waitData(int timeout)
 	if (_socket == 0)
 		return false;
 	while (1) {
+		errno = 0;
 		int ret = poll(&s, 1, timeout);
-		if (!(ret == -1 && errno == EAGAIN))
+		if (ret == -1 && errno == EAGAIN)
 			continue;
-		return (ret == 0 && (s.revents & POLLIN) == POLLIN);
+		return (ret == 1 && (s.revents & POLLIN) == POLLIN);
 	}
 	return false;
 }

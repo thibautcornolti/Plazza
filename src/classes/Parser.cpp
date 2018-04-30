@@ -21,14 +21,6 @@ Plazza::Parser::~Parser()
 {
 }
 
-std::string capture(const std::string &in, const std::string &pattern)
-{
-	std::smatch match;
-	if (std::regex_search(in, match, std::regex(pattern)))
-		return match.str(1);
-	return "";
-}
-
 std::vector<std::string> Plazza::Parser::split(
 	const std::string &in, const std::string &pattern)
 {

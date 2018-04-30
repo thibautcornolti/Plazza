@@ -28,9 +28,7 @@ namespace Plazza {
 	protected:
 	private:
 		Worker &getBestWorker();
-
 		WorkerPool _pool;
-
 		Fork _fork;
 	};
 };

@@ -10,6 +10,8 @@
 #include <netdb.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <stdexcept>
+#include <string.h>
 
 ServerTCPSocket::ServerTCPSocket() : TCPSocket()
 {
@@ -17,7 +19,8 @@ ServerTCPSocket::ServerTCPSocket() : TCPSocket()
 
 ServerTCPSocket::ServerTCPSocket(const std::string &ip, int port) : TCPSocket()
 {
-	ServerTCPSocket::listen(ip, port);
+	if (ServerTCPSocket::listen(ip, port) == false)
+		throw std::runtime_error("listen error");
 }
 
 ServerTCPSocket::ServerTCPSocket(int fd) : TCPSocket(fd)
@@ -30,8 +33,9 @@ ServerTCPSocket::~ServerTCPSocket()
 
 bool ServerTCPSocket::listen(const std::string &ip, int port)
 {
-	struct sockaddr_in addr;
+	sockaddr_in addr;
 
+	memset(&addr, 0, sizeof(addr));
 	addr.sin_addr.s_addr = inet_addr(ip.c_str());
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
