@@ -13,7 +13,10 @@ Plazza::WorkerOutputHandler::WorkerOutputHandler()
 		  std::to_string(getpid() * time(NULL)) + ".sock"),
 	  _clients(0)
 {
+	std::mutex m;
+	std::unique_lock<std::mutex> lk(m);
 	_thread = std::thread(&Plazza::WorkerOutputHandler::_run, this);
+	_threadCond.wait(lk);
 }
 
 Plazza::WorkerOutputHandler::~WorkerOutputHandler()
@@ -32,6 +35,7 @@ void Plazza::WorkerOutputHandler::_run()
 	mkdir(".sockets", S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 	_server = ServerUnixSocket(_path);
 	while (!_hasToExit) {
+		_threadCond.notify_all();
 		_waitEvent();
 		if (_server.isDataPending()) {
 			_clients.push_back(_server.accept());

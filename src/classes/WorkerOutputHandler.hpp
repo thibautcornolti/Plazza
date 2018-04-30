@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <vector>
 #include <thread>
+#include <condition_variable>
 #include <string>
 #include "socket/ServerUnixSocket.hpp"
 
@@ -30,6 +31,7 @@ namespace Plazza {
 
 		bool _hasToExit;
 		std::thread _thread;
+		std::condition_variable _threadCond;
 		std::string _path;
 		ServerUnixSocket _server;
 		std::vector<UnixSocket> _clients;

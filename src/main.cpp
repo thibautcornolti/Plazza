@@ -53,10 +53,9 @@ int main(int ac, char **av)
 	// ui.stop();
 
 	Plazza::WorkerOutputHandler w;
-	std::this_thread::sleep_for(std::chrono::seconds(1));
 	printf("%s\n", w.getPath().c_str());
 	ClientUnixSocket u(w.getPath());
 	u.send("oui!\n");
-	std::this_thread::sleep_for(std::chrono::seconds(30));
+	std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
