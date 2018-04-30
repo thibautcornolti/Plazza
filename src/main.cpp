@@ -11,7 +11,9 @@
 #include "classes/Task.hpp"
 #include "classes/Worker.hpp"
 #include "classes/socket/ClientTCPSocket.hpp"
+#include "classes/socket/ClientUnixSocket.hpp"
 #include "classes/UserInterface.hpp"
+#include "classes/WorkerOutputHandler.hpp"
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -45,9 +47,16 @@ int main(int ac, char **av)
 	// std::cin >> out;
 	// std::cout << out << std::endl;
 
-	Plazza::UserInterface ui;
-	ui.launch();
+	// Plazza::UserInterface ui;
+	// ui.launch();
 	// std::this_thread::sleep_for(std::chrono::seconds(100));
-	ui.stop();
+	// ui.stop();
+
+	Plazza::WorkerOutputHandler w;
+	std::this_thread::sleep_for(std::chrono::seconds(1));
+	printf("%s\n", w.getPath().c_str());
+	ClientUnixSocket u(w.getPath());
+	u.send("oui!\n");
+	std::this_thread::sleep_for(std::chrono::seconds(30));
 	return 0;
 }
