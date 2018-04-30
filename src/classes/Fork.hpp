@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "socket/UnixSocket.hpp"
 #include <unistd.h>
 #include <stdexcept>
 
@@ -23,5 +24,6 @@ class Fork {
 	private:
 		int _otherPid = 0;
 		int _pid = 0;
+		UnixSocket _socket;
 		bool _isChild = false;
 };

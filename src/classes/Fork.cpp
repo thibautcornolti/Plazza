@@ -6,17 +6,26 @@
 */
 
 #include "Fork.hpp"
+#include "socket/SocketPair.hpp"
+#include <sys/socket.h>
 
 Fork::Fork() : _otherPid(getpid())
 {
 	int pid = fork();
+	SocketPair<UnixSocket> pair(AF_UNIX, SOCK_STREAM, 0);
 
 	if (pid < 0)
 		throw std::runtime_error("fork failed");
-	else if (pid)
+	else if (pid) {
 		_otherPid = pid;
-	else
+		_socket = pair.get(1);
+		pair.close(0);
+	}
+	else {
 		_isChild = false;
+		_socket = pair.get(0);
+		pair.close(1);
+	}
 	_pid = getpid();
 }
 

@@ -26,7 +26,8 @@ Plazza::Slave &Plazza::SlavePool::getBestSlave()
 			minSlave = i;
 			minLoad = _slaves[i]->getLoad();
 		}
-	printf("[SLAVE POOL] Using slave %d (with load %d)\n", minSlave, minLoad);
+	printf("[SLAVE POOL] Using slave %d (with load %d)\n", minSlave,
+		minLoad);
 	return *_slaves[minSlave];
 }
 

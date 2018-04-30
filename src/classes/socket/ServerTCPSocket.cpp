@@ -32,12 +32,11 @@ bool ServerTCPSocket::listen(const std::string &ip, int port)
 {
 	struct sockaddr_in addr;
 
-	if (::listen(_socket, 1024) == -1)
-		return false;
 	addr.sin_addr.s_addr = inet_addr(ip.c_str());
 	addr.sin_port = htons(port);
 	addr.sin_family = AF_INET;
-	return ::bind(_socket, (const sockaddr *)&addr, sizeof(addr)) == 0;
+	return ::bind(_socket, (const sockaddr *)&addr, sizeof(addr)) == 0 &&
+		::listen(_socket, 1024) == 0;
 }
 
 TCPSocket ServerTCPSocket::accept()
