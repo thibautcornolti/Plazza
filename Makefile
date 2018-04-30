@@ -43,7 +43,7 @@ CPPFLAGS	+=	-W -Wall -Wextra -std=c++14 -g
 
 LDFLAGS	+=	-pthread
 
-all:	$(OBJDIR)/classes/socket $(NAME)
+ui:	$(OBJDIR)/classes/socket $(NAME)
 
 $(NAME):	$(OBJS)
 		$(CC) $(OBJS) -o $(NAME) $(LDFLAGS)
@@ -66,6 +66,6 @@ clean:
 fclean:	clean
 	$(RM) $(NAME)
 
-re:	fclean all
+re:	fclean ui
 
-.PHONY:	all clean fclean re
+.PHONY:	ui clean fclean re

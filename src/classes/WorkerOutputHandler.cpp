@@ -33,9 +33,7 @@ void Plazza::WorkerOutputHandler::_run()
 	_server = ServerUnixSocket(_path);
 	while (!_hasToExit) {
 		_waitEvent();
-		printf("unblock!\n");
 		if (_server.isDataPending()) {
-			printf("connected!\n");
 			_clients.push_back(_server.accept());
 			continue;
 		}

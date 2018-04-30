@@ -57,6 +57,6 @@ int main(int ac, char **av)
 	printf("%s\n", w.getPath().c_str());
 	ClientUnixSocket u(w.getPath());
 	u.send("oui!\n");
-	std::this_thread::sleep_for(std::chrono::seconds(3));
+	std::this_thread::sleep_for(std::chrono::seconds(30));
 	return 0;
 }
