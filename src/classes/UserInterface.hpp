@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <string.h>
-#include <vector>
-#include <thread>
-#include "socket/ServerTCPSocket.hpp"
 #include "WebServer.hpp"
+#include "socket/ServerTCPSocket.hpp"
+#include <string.h>
+#include <thread>
+#include <vector>
 
 namespace Plazza {
 	class UserInterface {
@@ -25,6 +25,7 @@ namespace Plazza {
 	protected:
 	private:
 		void _run();
+		std::string _router(const std::string &, const std::string &);
 
 		bool _launched;
 		bool _hasToStop;

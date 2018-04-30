@@ -7,14 +7,20 @@
 
 #pragma once
 
-#include <string.h>
-#include <poll.h>
-#include <vector>
 #include "socket/ServerTCPSocket.hpp"
+#include <functional>
+#include <regex>
+#include <poll.h>
+#include <string.h>
+#include <vector>
 
 class WebServer {
 public:
-	WebServer(const std::string &, int);
+	using Router = std::function<std::string(
+		const std::string &method, const std::string &path)>;
+
+	WebServer(const std::string &, int,
+		const Router &router);
 	WebServer() = default;
 	~WebServer();
 
@@ -23,9 +29,13 @@ public:
 protected:
 private:
 	void _waitEvent();
+	void _ingestHeader(const std::string &);
 
 	std::string _ip;
 	int _port;
 	ServerTCPSocket _socket;
 	std::vector<TCPSocket> _sockets;
+	Router _router;
+	std::string _lastMethod;
+	std::string _lastPath;
 };

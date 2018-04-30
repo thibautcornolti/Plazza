@@ -7,8 +7,8 @@
 
 #include "WebServer.hpp"
 
-WebServer::WebServer(const std::string &ip, int port)
-	: _ip(ip), _port(port), _socket(ip, port), _sockets(0)
+WebServer::WebServer(const std::string &ip, int port, const Router &router)
+	: _ip(ip), _port(port), _socket(ip, port), _sockets(0), _router(router)
 {
 }
 
@@ -20,14 +20,14 @@ void WebServer::launch()
 {
 	while (1) {
 		_waitEvent();
-		printf("unblocking\n");
 		if (_socket.isDataPending()) {
-			printf("new client!\n");
 			TCPSocket client = _socket.accept();
-			std::string inputs("first");
-			while (inputs != "\r")
+			std::string inputs;
+			do {
 				inputs = client.receive();
-			std::string res("tagrocemer\n");
+				_ingestHeader(inputs);
+			} while (inputs != "\r");
+			auto res = _router(_lastMethod, _lastPath);
 			client.send("HTTP/1.1 200 OK\n"
 				    "Content-Type: text/html\n"
 				    "Content-Length: " +
@@ -37,6 +37,15 @@ void WebServer::launch()
 		}
 		else {
 		}
+	}
+}
+
+void WebServer::_ingestHeader(const std::string &line)
+{
+	std::cmatch cm;
+	if (std::regex_search(line.c_str(), cm, std::regex("^(GET|POST) ([^\\s]+)"))) {
+		_lastMethod = cm[1];
+		_lastPath = cm[2];
 	}
 }
 
