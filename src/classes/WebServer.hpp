@@ -9,8 +9,8 @@
 
 #include "socket/ServerTCPSocket.hpp"
 #include <functional>
-#include <regex>
 #include <poll.h>
+#include <regex>
 #include <string.h>
 #include <vector>
 
@@ -19,8 +19,7 @@ public:
 	using Router = std::function<std::string(
 		const std::string &method, const std::string &path)>;
 
-	WebServer(const std::string &, int,
-		const Router &router);
+	WebServer(const std::string &, int, const Router &router);
 	WebServer() = default;
 	~WebServer();
 

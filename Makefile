@@ -23,6 +23,7 @@ LIST	=	classes/Task			\
 		classes/WebServer		\
 		classes/socket/Socket		\
 		classes/socket/TCPSocket	\
+		classes/socket/UnixSocket	\
 		classes/socket/ServerTCPSocket	\
 		classes/socket/ClientTCPSocket	\
 		main

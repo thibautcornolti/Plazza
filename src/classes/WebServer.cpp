@@ -28,8 +28,8 @@ void WebServer::launch()
 				_ingestHeader(inputs);
 			} while (inputs != "\r");
 			auto res = _router(_lastMethod, _lastPath);
-			client.send("HTTP/1.1 200 OK\n"
-				    "Content-Type: text/html\n"
+			client.send("HTTP/1.1 200 OK\r\n"
+				    "Content-Type: text/html\r\n"
 				    "Content-Length: " +
 				std::to_string(res.length()) + "\r\n\r\n");
 			client.send(res);
@@ -43,7 +43,8 @@ void WebServer::launch()
 void WebServer::_ingestHeader(const std::string &line)
 {
 	std::cmatch cm;
-	if (std::regex_search(line.c_str(), cm, std::regex("^(GET|POST) ([^\\s]+)"))) {
+	if (std::regex_search(
+		    line.c_str(), cm, std::regex("^(GET|POST) ([^\\s]+)"))) {
 		_lastMethod = cm[1];
 		_lastPath = cm[2];
 	}

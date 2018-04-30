@@ -7,9 +7,13 @@
 
 #pragma once
 
+#include <sys/socket.h>
+
 template <class T>
 SocketPair<T>::SocketPair(int domain, int type, int protocol)
 {
+	if (socketpair(domain, type, protocol, _fds))
+		throw std::runtime_error("socketpair failure");
 }
 
 template <class T> SocketPair<T>::~SocketPair()
