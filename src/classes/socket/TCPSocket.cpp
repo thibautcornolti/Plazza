@@ -11,6 +11,8 @@
 
 TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
 {
+	int i = 1;
+	setsockopt(_socket, SOL_SOCKET, SO_REUSEADDR, &i, sizeof(int));
 }
 
 TCPSocket::TCPSocket(int fd) : Socket(fd)

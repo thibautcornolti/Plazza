@@ -11,6 +11,7 @@
 #include "classes/Task.hpp"
 #include "classes/Worker.hpp"
 #include "classes/socket/ClientTCPSocket.hpp"
+#include "classes/UserInterface.hpp"
 #include <chrono>
 #include <iostream>
 #include <thread>
@@ -43,5 +44,10 @@ int main(int ac, char **av)
 	// std::cout << out << std::endl;
 	// std::cin >> out;
 	// std::cout << out << std::endl;
+
+	Plazza::UserInterface ui;
+	ui.launch();
+	// std::this_thread::sleep_for(std::chrono::seconds(100));
+	ui.stop();
 	return 0;
 }
