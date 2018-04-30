@@ -9,6 +9,7 @@
 
 #include "Task.hpp"
 #include "Worker.hpp"
+#include "WorkerPool.hpp"
 
 namespace Plazza {
 	class ForkedSlave {
@@ -26,6 +27,6 @@ namespace Plazza {
 			Worker &getBestWorker();
 
 			unsigned int _workerCount;
-			std::vector<Worker> _workers;
+			WorkerPool _pool;
 	};
 };
