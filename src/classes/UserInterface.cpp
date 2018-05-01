@@ -7,12 +7,14 @@
 
 #include "UserInterface.hpp"
 
-Plazza::UserInterface::UserInterface(Plazza::SlavePool &pool) : _pool(pool)
+Plazza::UserInterface::UserInterface(Plazza::SlavePool &pool)
+	: _pool(pool), _launched(false), _hasToStop(false)
 {
 }
 
 Plazza::UserInterface::~UserInterface()
 {
+	Plazza::UserInterface::stop();
 }
 
 void Plazza::UserInterface::launch()
@@ -27,6 +29,7 @@ void Plazza::UserInterface::stop()
 {
 	_hasToStop = true;
 	_thread.join();
+	_launched = false;
 }
 
 void Plazza::UserInterface::_run()
@@ -36,7 +39,8 @@ void Plazza::UserInterface::_run()
 		std::bind(&Plazza::UserInterface::_router, this,
 			std::placeholders::_1, std::placeholders::_2));
 	printf("[UI] Starting at http://127.0.0.1:8181/\n");
-	_srv.launch();
+	_srv.launch(_hasToStop);
+	printf("[UI] Stopped\n");
 }
 
 std::string Plazza::UserInterface::_router(
@@ -44,11 +48,21 @@ std::string Plazza::UserInterface::_router(
 {
 	_lastRes = "{ \"method\": \"" + method + "\", \"path\": \"" + path +
 		"\" }";
-	_endpointPushTask(method, path);
+	_endpointScrap(method, path);
+	_endpointSlaves(method, path);
 	return _lastRes;
 }
 
-void Plazza::UserInterface::_endpointPushTask(
+void Plazza::UserInterface::_endpointSlaves(
+	const std::string &, const std::string &path)
+{
+	std::cmatch cm;
+
+	if (std::regex_search(path.c_str(), cm, std::regex("^/slaves/$"))) {
+	}
+}
+
+void Plazza::UserInterface::_endpointScrap(
 	const std::string &, const std::string &path)
 {
 	std::cmatch cm;
@@ -59,8 +73,7 @@ void Plazza::UserInterface::_endpointPushTask(
 			       "]+)/?$"))) {
 		Plazza::Task task(Plazza::Task::SCRAP, cm[2].str(),
 			_criteriaRefs.at(cm[1].str()));
-		// TODO: LE PUSH TASK SEGV
-		// _pool.pushTask(task);
+		_pool.pushTask(task);
 		_lastRes = "{ \"result\": \"scrap task pushed to workers\", "
 			   "\"criteria\": \"" +
 			cm[1].str() + "\", \"filename\": \"" + cm[2].str() +

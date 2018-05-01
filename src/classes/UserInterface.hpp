@@ -28,8 +28,8 @@ namespace Plazza {
 	private:
 		void _run();
 		std::string _router(const std::string &, const std::string &);
-		void _endpointPushTask(
-			const std::string &, const std::string &);
+		void _endpointScrap(const std::string &, const std::string &);
+		void _endpointSlaves(const std::string &, const std::string &);
 		std::map<std::string, Plazza::Task::Criteria> _criteriaRefs{
 			{"PHONE_NUMBER", Plazza::Task::Criteria::PHONE_NUMBER},
 			{"IP_ADDRESS", Plazza::Task::Criteria::IP_ADDRESS},
