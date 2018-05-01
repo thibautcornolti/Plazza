@@ -7,7 +7,7 @@
 
 #include "UserInterface.hpp"
 
-Plazza::UserInterface::UserInterface()
+Plazza::UserInterface::UserInterface(Plazza::SlavePool &pool) : _pool(pool)
 {
 }
 
@@ -42,5 +42,28 @@ void Plazza::UserInterface::_run()
 std::string Plazza::UserInterface::_router(
 	const std::string &method, const std::string &path)
 {
-	return method + " " + path;
+	_lastRes = "{ \"method\": \"" + method + "\", \"path\": \"" + path +
+		"\" }";
+	_endpointPushTask(method, path);
+	return _lastRes;
+}
+
+void Plazza::UserInterface::_endpointPushTask(
+	const std::string &, const std::string &path)
+{
+	std::cmatch cm;
+
+	if (std::regex_search(path.c_str(), cm,
+		    std::regex("^/scrap/"
+			       "(IP_ADDRESS|PHONE_NUMBER|EMAIL_ADDRESS)/([^/"
+			       "]+)/?$"))) {
+		Plazza::Task task(Plazza::Task::SCRAP, cm[2].str(),
+			_criteriaRefs.at(cm[1].str()));
+		// TODO: LE PUSH TASK SEGV
+		// _pool.pushTask(task);
+		_lastRes = "{ \"result\": \"scrap task pushed to workers\", "
+			   "\"criteria\": \"" +
+			cm[1].str() + "\", \"filename\": \"" + cm[2].str() +
+			"\" }";
+	}
 }

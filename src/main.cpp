@@ -22,7 +22,7 @@ int main(int ac, char **av)
 {
 	// TEST PARSER AND WORKERS
 	// Plazza::Parser p;
-	// Plazza::SlavePool pool(1);
+	Plazza::SlavePool pool(1);
 	// bool hasTasks = true;
 
 	// while (hasTasks) {
@@ -47,15 +47,15 @@ int main(int ac, char **av)
 	// std::cin >> out;
 	// std::cout << out << std::endl;
 
-	// Plazza::UserInterface ui;
-	// ui.launch();
-	// std::this_thread::sleep_for(std::chrono::seconds(100));
-	// ui.stop();
+	Plazza::UserInterface ui(pool);
+	ui.launch();
+	std::this_thread::sleep_for(std::chrono::seconds(100));
+	ui.stop();
 
-	Plazza::WorkerOutputHandler w;
-	printf("%s\n", w.getPath().c_str());
-	ClientUnixSocket u(w.getPath());
-	u.send("oui!\n");
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	// Plazza::WorkerOutputHandler w;
+	// printf("%s\n", w.getPath().c_str());
+	// ClientUnixSocket u(w.getPath());
+	// u.send("oui!\n");
+	// std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
