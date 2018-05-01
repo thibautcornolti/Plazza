@@ -47,7 +47,7 @@ int main(int ac, char **av)
 	// std::cin >> out;
 	// std::cout << out << std::endl;
 
-	// Plazza::UserInterface ui;
+	// Plazza::UserInterface ui(pool);
 	// ui.launch();
 	// std::this_thread::sleep_for(std::chrono::seconds(100));
 	// ui.stop();

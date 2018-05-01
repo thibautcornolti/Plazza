@@ -45,8 +45,8 @@ void WebServer::_ingestHeader(const std::string &line)
 	std::cmatch cm;
 	if (std::regex_search(
 		    line.c_str(), cm, std::regex("^(GET|POST) ([^\\s]+)"))) {
-		_lastMethod = cm[1];
-		_lastPath = cm[2];
+		_lastMethod = cm[1].str();
+		_lastPath = cm[2].str();
 	}
 }
 
