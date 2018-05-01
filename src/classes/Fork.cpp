@@ -11,8 +11,8 @@
 
 Fork::Fork() : _otherPid(getpid())
 {
-	int pid = fork();
 	SocketPair<UnixSocket> pair(AF_UNIX, SOCK_STREAM, 0);
+	int pid = fork();
 
 	if (pid < 0)
 		throw std::runtime_error("fork failed");
@@ -22,7 +22,7 @@ Fork::Fork() : _otherPid(getpid())
 		pair.close(0);
 	}
 	else {
-		_isChild = false;
+		_isChild = true;
 		_socket = pair.get(0);
 		pair.close(1);
 	}
@@ -48,4 +48,9 @@ int Fork::getPid()
 int Fork::getOtherPid()
 {
 	return _otherPid;
+}
+
+UnixSocket &Fork::getSocket()
+{
+	return _socket;
 }

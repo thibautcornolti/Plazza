@@ -27,5 +27,5 @@ template <class T> T SocketPair<T>::get(size_t idx)
 
 template <class T> void SocketPair<T>::close(size_t idx)
 {
-	close(_fds[idx]);
+	::close(_fds[idx]);
 }

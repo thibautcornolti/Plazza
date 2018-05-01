@@ -8,6 +8,7 @@
 #pragma once
 
 #include "socket/UnixSocket.hpp"
+#include "ForkedSlave.hpp"
 #include <unistd.h>
 #include <stdexcept>
 
@@ -19,6 +20,7 @@ class Fork {
 		bool isChild();
 		int getPid();
 		int getOtherPid();
+		UnixSocket &getSocket();
 
 	protected:
 	private:

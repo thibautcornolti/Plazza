@@ -21,16 +21,16 @@
 int main(int ac, char **av)
 {
 	// TEST PARSER AND WORKERS
-	// Plazza::Parser p;
-	// Plazza::SlavePool pool(1);
-	// bool hasTasks = true;
+	Plazza::Parser p;
+	Plazza::SlavePool pool(4);
+	bool hasTasks = true;
 
-	// while (hasTasks) {
-	// 	auto task = p.getNextTask();
-	// 	std::cout << task << std::endl;
-	// 	pool.pushTask(task);
-	// 	hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
-	// }
+	while (hasTasks) {
+		auto task = p.getNextTask();
+		std::cout << task << std::endl;
+		pool.pushTask(task);
+		hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
+	}
 
 	// TEST SOCKETS
 	// ClientTCPSocket socket("hirevo.eu", 4444);
@@ -52,10 +52,10 @@ int main(int ac, char **av)
 	// std::this_thread::sleep_for(std::chrono::seconds(100));
 	// ui.stop();
 
-	Plazza::WorkerOutputHandler w;
-	printf("%s\n", w.getPath().c_str());
-	ClientUnixSocket u(w.getPath());
-	u.send("oui!\n");
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	// Plazza::WorkerOutputHandler w;
+	// printf("%s\n", w.getPath().c_str());
+	// ClientUnixSocket u(w.getPath());
+	// u.send("oui!\n");
+	// std::this_thread::sleep_for(std::chrono::seconds(1));
 	return 0;
 }
