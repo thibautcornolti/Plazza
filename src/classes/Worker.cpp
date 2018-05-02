@@ -8,6 +8,8 @@
 #include "Worker.hpp"
 #include <unistd.h>
 
+#include "Scrapper.hpp"
+
 Plazza::Worker::Worker() : _tasks(), _isWorking(false), _isRunning(false)
 {
 }
@@ -82,6 +84,7 @@ void Plazza::Worker::_run()
 void Plazza::Worker::_parse(Plazza::Task &task)
 {
 	printf("[WORKER] Thread is working\n");
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	Plazza::Scrapper s(task);
+	s.startScrapper();
 	printf("[WORKER] Thread is not working anymore\n");
 }

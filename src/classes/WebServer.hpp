@@ -23,7 +23,7 @@ public:
 	WebServer() = default;
 	~WebServer();
 
-	void launch();
+	void launch(bool &);
 
 protected:
 private:

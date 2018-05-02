@@ -16,9 +16,9 @@ WebServer::~WebServer()
 {
 }
 
-void WebServer::launch()
+void WebServer::launch(bool &hasToStop)
 {
-	while (1) {
+	while (!hasToStop) {
 		_waitEvent();
 		if (_socket.isDataPending()) {
 			TCPSocket client = _socket.accept();
@@ -61,5 +61,5 @@ void WebServer::_waitEvent()
 			.revents = 0});
 	fds.push_back(pollfd{
 		.fd = _socket.getHandle(), .events = POLLIN, .revents = 0});
-	poll(&fds[0], fds.size(), -1);
+	poll(&fds[0], fds.size(), 1000);
 }
