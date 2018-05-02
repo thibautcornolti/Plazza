@@ -20,13 +20,20 @@ namespace Plazza {
 		Slave(unsigned);
 		~Slave();
 
-		void pushTask(Task &);
+		void pushTask(const Task);
 		unsigned getLoad();
 		unsigned getTotalPower();
 		unsigned getAvailablePower();
+		void exit();
 
 	protected:
 	private:
+		void handleTask(std::istringstream &input);
+		void handleLoad(std::istringstream &input);
+		void handleTotalPower(std::istringstream &input);
+		void handleAvailablePower(std::istringstream &input);
+		void handleExit(std::istringstream &input);
+
 		Worker &getBestWorker();
 		WorkerPool _pool;
 		Fork _fork;

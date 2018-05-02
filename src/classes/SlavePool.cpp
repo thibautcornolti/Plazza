@@ -6,6 +6,7 @@
 */
 
 #include "SlavePool.hpp"
+#include <algorithm>
 
 Plazza::SlavePool::SlavePool(unsigned workerCount)
 	: _socket(), _workerCount(workerCount), _slaves()
@@ -36,7 +37,7 @@ void Plazza::SlavePool::createSlave()
 	_slaves.push_back(std::make_unique<Plazza::Slave>(_workerCount));
 }
 
-void Plazza::SlavePool::pushTask(Plazza::Task &task)
+void Plazza::SlavePool::pushTask(Plazza::Task task)
 {
 	printf("[SLAVE POOL] Available power %d\n", getAvailablePower());
 	if (getAvailablePower() == 0)
@@ -60,4 +61,13 @@ unsigned Plazza::SlavePool::getAvailablePower()
 	for (auto &s : _slaves)
 		availablePower += s->getAvailablePower();
 	return availablePower;
+}
+
+void Plazza::SlavePool::exit()
+{
+	std::for_each(_slaves.begin(), _slaves.end(),
+		[](std::unique_ptr<Plazza::Slave> &slave) {
+			slave->pushTask(Plazza::Task());
+		});
+	_slaves.clear();
 }

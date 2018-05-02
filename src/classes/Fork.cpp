@@ -8,6 +8,7 @@
 #include "Fork.hpp"
 #include "socket/SocketPair.hpp"
 #include <sys/socket.h>
+#include <sys/wait.h>
 
 Fork::Fork() : _otherPid(getpid())
 {
@@ -53,4 +54,15 @@ int Fork::getOtherPid()
 UnixSocket &Fork::getSocket()
 {
 	return _socket;
+}
+
+unsigned char Fork::wait()
+{
+	int ret = 0;
+
+	if (Fork::isChild() == false) {
+		waitpid(_otherPid, &ret, 0);
+		ret = WIFEXITED(ret) ? WEXITSTATUS(ret) : (ret % 128 + 128);
+	}
+	return ret;
 }

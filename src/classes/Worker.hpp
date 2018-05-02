@@ -12,9 +12,10 @@
 #include <queue>
 #include <thread>
 #include "Task.hpp"
+#include "TaskPusherizer.hpp"
 
 namespace Plazza {
-	class Worker {
+	class Worker : public TaskPusherizer {
 	public:
 		Worker();
 		~Worker();
@@ -23,7 +24,7 @@ namespace Plazza {
 		bool isRunning();
 		unsigned getLoad();
 		void join();
-		void pushTask(const Task &);
+		void pushTask(const Task);
 
 	protected:
 	private:
@@ -31,6 +32,7 @@ namespace Plazza {
 		void _parse(Plazza::Task &);
 
 		std::thread _thread;
+		std::mutex _mutex;
 		std::condition_variable _threadCond;
 		std::queue<Plazza::Task> _tasks;
 		bool _isWorking;

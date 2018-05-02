@@ -21,7 +21,7 @@ Plazza::Worker::~Worker()
 
 unsigned Plazza::Worker::getLoad()
 {
-	return _tasks.size();
+	return _tasks.size() + _isWorking;
 }
 
 bool Plazza::Worker::isWorking()
@@ -34,16 +34,17 @@ bool Plazza::Worker::isRunning()
 	return _isRunning;
 }
 
-void Plazza::Worker::pushTask(const Plazza::Task &task)
+void Plazza::Worker::pushTask(const Plazza::Task task)
 {
-	_isWorking = true;
+	_mutex.lock();
 	_tasks.push(task);
+	_threadCond.notify_one();
+	_mutex.unlock();
 	if (!_isRunning) {
 		join();
 		_isRunning = true;
 		_thread = std::thread(&Plazza::Worker::_run, this);
 	}
-	_threadCond.notify_one();
 }
 
 void Plazza::Worker::join()
@@ -58,19 +59,22 @@ void Plazza::Worker::_run()
 {
 	printf("[WORKER] Thread started\n");
 	while (1) {
+		_mutex.lock();
 		if (_tasks.empty()) {
-			_isWorking = false;
-			std::mutex m;
-			std::unique_lock<std::mutex> lk(m);
+			std::unique_lock<std::mutex> lk(
+				_mutex, std::defer_lock);
 			_threadCond.wait(lk);
 		}
 		if (_tasks.empty())
 			continue;
 		auto task = _tasks.front();
+		_tasks.pop();
+		_isWorking = true;
+		_mutex.unlock();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
 		_parse(task);
-		_tasks.pop();
+		_isWorking = false;
 	}
 	printf("[WORKER] Thread finished\n");
 }
@@ -78,6 +82,6 @@ void Plazza::Worker::_run()
 void Plazza::Worker::_parse(Plazza::Task &task)
 {
 	printf("[WORKER] Thread is working\n");
-	
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	printf("[WORKER] Thread is not working anymore\n");
 }

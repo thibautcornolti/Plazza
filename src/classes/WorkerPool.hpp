@@ -15,12 +15,13 @@
 namespace Plazza {
 	class WorkerPool : public TaskPusherizer {
 	public:
-		WorkerPool(size_t threadCount);
+		WorkerPool(size_t);
 		~WorkerPool();
-		void pushTask(Plazza::Task &task) override;
+		void pushTask(const Plazza::Task) override;
 		unsigned getLoad();
 		unsigned getTotalPower();
 		unsigned getAvailablePower();
+		void exit();
 
 	protected:
 	private:

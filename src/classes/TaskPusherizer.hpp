@@ -12,7 +12,7 @@
 namespace Plazza {
 	class TaskPusherizer {
 	public:
-		virtual void pushTask(Plazza::Task &task) = 0;
+		virtual void pushTask(const Plazza::Task task) = 0;
 
 	protected:
 	private:

@@ -6,6 +6,7 @@
 */
 
 #include "WorkerPool.hpp"
+#include <algorithm>
 
 Plazza::WorkerPool::WorkerPool(size_t threadCount) : _threadCount(threadCount)
 {
@@ -42,7 +43,7 @@ Plazza::Worker &Plazza::WorkerPool::getBestWorker()
 	return *_workers[minWorker].get();
 }
 
-void Plazza::WorkerPool::pushTask(Plazza::Task &task)
+void Plazza::WorkerPool::pushTask(const Plazza::Task task)
 {
 	printf("[WorkerPool] Available power %d\n", getAvailablePower());
 	getBestWorker().pushTask(task);
@@ -60,4 +61,13 @@ unsigned Plazza::WorkerPool::getAvailablePower()
 	for (auto &w : _workers)
 		availablePower += !w->isWorking();
 	return availablePower;
+}
+
+void Plazza::WorkerPool::exit()
+{
+	std::for_each(_workers.begin(), _workers.end(),
+		[](std::unique_ptr<Plazza::Worker> &worker) {
+			worker->pushTask(Plazza::Task());
+		});
+	_workers.clear();
 }

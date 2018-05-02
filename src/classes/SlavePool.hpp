@@ -17,11 +17,12 @@ namespace Plazza {
 		SlavePool(unsigned);
 		~SlavePool();
 
-		void pushTask(Task &);
+		void pushTask(Task);
 		void createSlave();
 		Slave &getBestSlave();
 		unsigned getTotalPower();
 		unsigned getAvailablePower();
+		void exit();
 
 	protected:
 	private:

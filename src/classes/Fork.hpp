@@ -21,6 +21,7 @@ class Fork {
 		int getPid();
 		int getOtherPid();
 		UnixSocket &getSocket();
+		unsigned char wait();
 
 	protected:
 	private:

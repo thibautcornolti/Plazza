@@ -65,7 +65,10 @@ std::string Socket::receive()
 
 	while (strchr(s.c_str(), '\n') == 0) {
 		int size = read(_socket, buffer, 1024);
-		if (size == -1) printf("errno: %d\n", errno);
+		if (size == -1)
+			printf("errno: %d\n", errno);
+		else if (size == 0)
+			throw std::exception();
 		buffer[size] = 0;
 		// printf("buffer: '%s'\n", buffer);
 		s += buffer;

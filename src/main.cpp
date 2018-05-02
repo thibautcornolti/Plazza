@@ -25,12 +25,13 @@ int main(int ac, char **av)
 	Plazza::SlavePool pool(4);
 	bool hasTasks = true;
 
-	while (hasTasks) {
+	while (1) {
 		auto task = p.getNextTask();
-		std::cout << task << std::endl;
+		if (task.getType() == Plazza::Task::Type::EXIT)
+			break;
 		pool.pushTask(task);
-		hasTasks = !(task.getType() == Plazza::Task::Type::EXIT);
 	}
+	pool.exit();
 
 	// TEST SOCKETS
 	// ClientTCPSocket socket("hirevo.eu", 4444);
