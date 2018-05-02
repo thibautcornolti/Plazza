@@ -38,16 +38,9 @@ void Plazza::Scrapper::startScrapper()
 		r = "([0-9]{2}(\\.| )?){4}[0-9]{1,2}";
 	else if (this->_criteria == Plazza::Task::Criteria::IP_ADDRESS)
 		r = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(?: |\n|\r\n)";
-	std::cout << "------------------------------------------------------------\n" << std::endl;
-	std::cout << "\nBEGIN FILE" << std::endl;
-	std::cout << buf << std::endl;
-	std::cout << "END\n" << std::endl;
-	std::cout << "------------------------------------------------------------\n" << std::endl;
-	std::cout << "START REGEX" << std::endl;
 	std::string::const_iterator i(buf.cbegin());
 	while (std::regex_search(i, buf.cend(), m, r)) {
 		std::cout << m[0] << std::endl;
 		i += m.position() + m.length();
 	}
-	std::cout << "END REGEX\n" << std::endl;
 }
