@@ -31,16 +31,19 @@ void Plazza::Scrapper::startScrapper()
 	else
 		std::cerr << "Error: Couldn't open file '" << this->_file << "'" << std::endl;
 	ifs.close();
-
 	if (this->_criteria == Plazza::Task::Criteria::EMAIL_ADDRESS)
 		r = "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\.-]+\\.[a-zA-Z0-9_\\.-]+";
 	else if (this->_criteria == Plazza::Task::Criteria::PHONE_NUMBER)
 		r = "([0-9]{2}(\\.| )?){4}[0-9]{1,2}";
-	else if (this->_criteria == Plazza::Task::Criteria::IP_ADDRESS)
-		r = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(?: |\n|\r\n)";
+	else if (this->_criteria == Plazza::Task::Criteria::IP_ADDRESS) {
+		r = "(?:\\s|^)((?:[0-9]{1,3}\\.){3}[0-9]{1,3})(?:\\s|$)";
+//		r = "^([0-9]{1,3}\\.){3}[0-9]{1,3}(?: |\n|\r\n)";
+	}
 	std::string::const_iterator i(buf.cbegin());
+	std::cout << "\n================== INIT REGEX ======================\n" << std::endl;
 	while (std::regex_search(i, buf.cend(), m, r)) {
-		std::cout << m[0] << std::endl;
+		std::cout << m[(this->_criteria == Plazza::Task::Criteria::IP_ADDRESS)] << std::endl;
 		i += m.position() + m.length();
 	}
+	std::cout << "\n===================== END REGEX ==========================\n" << std::endl;
 }
