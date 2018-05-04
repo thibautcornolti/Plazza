@@ -32,8 +32,10 @@ Fork::Fork() : _otherPid(getpid())
 
 Fork::~Fork()
 {
-	if (isChild())
+	if (isChild()) {
+		dprintf(2, "__EXIT__\n");
 		exit(0);
+	}
 }
 
 bool Fork::isChild()

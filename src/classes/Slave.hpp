@@ -12,13 +12,16 @@
 #include "TaskPusherizer.hpp"
 #include "Worker.hpp"
 #include "WorkerPool.hpp"
+#include <functional>
 
 namespace Plazza {
 	class Slave : public TaskPusherizer {
 	public:
-		Slave(size_t, unsigned, const std::string &);
+		Slave(size_t, unsigned, const std::string &,
+			const std::function<void(void)> &);
 		~Slave();
 
+		void launchChild();
 		void pushTask(const Task);
 		unsigned getLoad();
 		unsigned getTotalPower();
@@ -38,5 +41,6 @@ namespace Plazza {
 		WorkerPool _pool;
 		Fork _fork;
 		std::string _loggerName;
+		std::function<void(void)> _atFork;
 	};
 };

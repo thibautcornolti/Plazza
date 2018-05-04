@@ -35,6 +35,7 @@ namespace Plazza {
 		void _waitEvent();
 
 		bool _hasToStop;
+		bool _isRunning;
 		std::thread _thread;
 		std::condition_variable _threadCond;
 		std::string _path;

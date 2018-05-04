@@ -22,7 +22,7 @@ namespace Plazza {
 		~Worker();
 
 		bool isWorking();
-		bool isRunning();
+		bool isRunning() const;
 		unsigned getLoad();
 		void join();
 		void pushTask(const Task);

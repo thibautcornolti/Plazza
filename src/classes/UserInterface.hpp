@@ -15,17 +15,18 @@
 #include <regex>
 #include <string.h>
 #include <string>
+#include <memory>
 #include <thread>
 #include <vector>
 
 namespace Plazza {
 	class UserInterface {
 	public:
-		UserInterface(
-			Plazza::SlavePool &, Plazza::WorkerOutputHandler &);
+		UserInterface();
 		~UserInterface();
 
-		void launch();
+		void launch(
+			Plazza::SlavePool &, Plazza::WorkerOutputHandler &);
 		void stop();
 
 	protected:
@@ -42,8 +43,8 @@ namespace Plazza {
 			{"EMAIL_ADDRESS",
 				Plazza::Task::Criteria::EMAIL_ADDRESS}};
 
-		Plazza::SlavePool &_pool;
-		Plazza::WorkerOutputHandler &_output;
+		std::unique_ptr<Plazza::SlavePool> _pool;
+		std::unique_ptr<Plazza::WorkerOutputHandler> _output;
 		bool _launched;
 		bool _hasToStop;
 		std::thread _thread;

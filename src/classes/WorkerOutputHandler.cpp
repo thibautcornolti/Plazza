@@ -8,11 +8,10 @@
 #include "WorkerOutputHandler.hpp"
 
 Plazza::WorkerOutputHandler::WorkerOutputHandler()
-	: _hasToStop(false),
+	: _isRunning(false), _hasToStop(false),
 	  _path(".sockets/wouthandler_" +
 		  std::to_string(getpid() * time(NULL)) + ".sock"),
-	  _clients(0),
-	  _logs(0)
+	  _clients(0), _logs(0)
 {
 	std::mutex m;
 	std::unique_lock<std::mutex> lk(m);
@@ -48,16 +47,17 @@ void Plazza::WorkerOutputHandler::popLogLine()
 void Plazza::WorkerOutputHandler::stop()
 {
 	_hasToStop = true;
-	dprintf(2, "Output stopping\n");
-	if (_thread.joinable()) {
-		dprintf(2, "Output joining\n");
+	dprintf(2, "[OUTPUT %d] stopping\n", getpid());
+	if (_thread.joinable() && _isRunning) {
+		dprintf(2, "[OUTPUT %d] joining\n", getpid());
 		_thread.join();
-		dprintf(2, "Output joined\n");
+		dprintf(2, "[OUTPUT %d] joined\n", getpid());
 	}
 }
 
 void Plazza::WorkerOutputHandler::_run()
 {
+	_isRunning = true;
 	mkdir(".sockets", S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 	_server = ServerUnixSocket(_path);
 	while (!_hasToStop) {
@@ -78,7 +78,8 @@ void Plazza::WorkerOutputHandler::_run()
 	}
 	_server.close();
 	remove(_path.c_str());
-	dprintf(2, "Output stopped!\n");
+	dprintf(2, "[OUTPUT %d] stopped!\n", getpid());
+	_isRunning = false;
 }
 
 void Plazza::WorkerOutputHandler::_waitEvent()

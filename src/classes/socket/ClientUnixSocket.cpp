@@ -35,7 +35,7 @@ bool ClientUnixSocket::connect(const std::string &path)
 
 	memset(&addr, 0, sizeof(addr));
 	memcpy(addr.sun_path, path.c_str(),
-		std::min(path.size(), sizeof(addr.sun_path)) - 1);
+		std::min(path.size(), sizeof(addr.sun_path) - 1));
 	addr.sun_family = AF_UNIX;
 	if (::connect(_socket, (const sockaddr *)&addr, sizeof(addr)) != 0)
 		return false;

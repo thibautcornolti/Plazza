@@ -34,13 +34,15 @@ bool Plazza::Worker::isWorking()
 	return _isWorking;
 }
 
-bool Plazza::Worker::isRunning()
+bool Plazza::Worker::isRunning() const
 {
 	return _isRunning;
 }
 
 void Plazza::Worker::pushTask(const Plazza::Task task)
 {
+	if (!_isRunning && task.getType() == Plazza::Task::EXIT)
+		return;
 	_mutex.lock();
 	_tasks.push(task);
 	_threadCond.notify_one();
@@ -75,8 +77,10 @@ void Plazza::Worker::_run()
 				_mutex, std::defer_lock);
 			_threadCond.wait(lk);
 		}
-		if (_tasks.empty())
+		if (_tasks.empty()) {
+			_mutex.unlock();
 			continue;
+		}
 		auto task = _tasks.front();
 		_tasks.pop();
 		_isWorking = true;
@@ -86,6 +90,7 @@ void Plazza::Worker::_run()
 		_parse(task);
 		_isWorking = false;
 	}
+	_logger.close();
 	dprintf(2, "[WORKER %lu:%lu] Thread finished\n", _slaveID, _workerID);
 }
 

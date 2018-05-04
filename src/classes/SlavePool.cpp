@@ -8,10 +8,10 @@
 #include "SlavePool.hpp"
 #include <algorithm>
 
-Plazza::SlavePool::SlavePool(
-	unsigned workerCount, const std::string &loggerName)
+Plazza::SlavePool::SlavePool(unsigned workerCount,
+	const std::string &loggerName, const std::function<void(void)> &atFork)
 	: _socket(), _workerCount(workerCount), _slaves(),
-	  _loggerName(loggerName)
+	  _loggerName(loggerName), _atFork(atFork)
 {
 }
 
@@ -37,7 +37,8 @@ Plazza::Slave &Plazza::SlavePool::getBestSlave()
 void Plazza::SlavePool::createSlave()
 {
 	_slaves.push_back(std::make_unique<Plazza::Slave>(
-		_slaves.size(), _workerCount, _loggerName));
+		_slaves.size(), _workerCount, _loggerName, _atFork));
+	_slaves.back()->launchChild();
 }
 
 void Plazza::SlavePool::pushTask(Plazza::Task task)

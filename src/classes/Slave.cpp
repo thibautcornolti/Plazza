@@ -8,12 +8,22 @@
 #include "Slave.hpp"
 #include <functional>
 #include <map>
+#include <signal.h>
 #include <sstream>
 
-Plazza::Slave::Slave(
-	size_t id, unsigned workerCount, const std::string &loggerName)
+Plazza::Slave::Slave(size_t id, unsigned workerCount,
+	const std::string &loggerName, const std::function<void(void)> &atFork)
 	: _id(id), _pool(_id, workerCount, loggerName), _fork(),
-	  _loggerName(loggerName)
+	  _loggerName(loggerName), _atFork(atFork)
+{
+}
+
+Plazza::Slave::~Slave()
+{
+	_fork.wait();
+}
+
+void Plazza::Slave::launchChild()
 {
 	std::map<std::string,
 		void (Plazza::Slave::*)(std::istringstream & input)>
@@ -25,6 +35,7 @@ Plazza::Slave::Slave(
 
 	if (_fork.isChild() == 0)
 		return;
+	_atFork();
 	auto socket = _fork.getSocket();
 	while (1) {
 		try {
@@ -37,14 +48,10 @@ Plazza::Slave::Slave(
 			(this->*map.at(opcode))(order);
 		}
 		catch (...) {
+			dprintf(2, "__EXXIT__\n");
 			std::exit(0);
 		}
 	}
-}
-
-Plazza::Slave::~Slave()
-{
-	_fork.wait();
 }
 
 unsigned Plazza::Slave::getLoad()
@@ -106,11 +113,19 @@ void Plazza::Slave::exit()
 {
 	if (_fork.isChild()) {
 		_pool.exit();
+		dprintf(2, "__EXIIT__\n");
+		// std::this_thread::sleep_for(std::chrono::seconds(5));
+		// dprintf(2, "fils: pid: %d %d\n", getpid(), _fork.getPid());
 		::exit(0);
 	}
 	else {
+		dprintf(2, "perr: pid: %d %d\n", getpid(), _fork.getPid());
+		dprintf(2, "SENDED EXIT TO FORK\n");
 		_fork.getSocket().send("EXIT\n");
+		dprintf(2, "SENDED WAIT TO FORK\n");
+		std::this_thread::sleep_for(std::chrono::seconds(2));
 		_fork.wait();
+		dprintf(2, "WAITED TO FORK\n");
 	}
 }
 
