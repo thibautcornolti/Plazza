@@ -11,7 +11,8 @@ Plazza::WorkerOutputHandler::WorkerOutputHandler()
 	: _hasToExit(false),
 	  _path(".sockets/wouthandler_" +
 		  std::to_string(getpid() * time(NULL)) + ".sock"),
-	  _clients(0)
+	  _clients(0),
+	  _logs(0)
 {
 	std::mutex m;
 	std::unique_lock<std::mutex> lk(m);
@@ -30,6 +31,21 @@ std::string Plazza::WorkerOutputHandler::getPath()
 	return _path;
 }
 
+bool Plazza::WorkerOutputHandler::hasLogPending()
+{
+	return _logs.size() > 0;
+}
+
+std::string Plazza::WorkerOutputHandler::getLogLine()
+{
+	return _logs.front();
+}
+
+void Plazza::WorkerOutputHandler::popLogLine()
+{
+	_logs.pop_front();
+}
+
 void Plazza::WorkerOutputHandler::_run()
 {
 	mkdir(".sockets", S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
@@ -42,8 +58,12 @@ void Plazza::WorkerOutputHandler::_run()
 			continue;
 		}
 		for (auto &client : _clients) {
-			while (client.isDataPending())
-				printf("%s\n", client.receive().c_str());
+			std::string received;
+			while (client.isDataPending()) {
+				received = client.receive();
+				printf("[LOG] %s\n", received.c_str());
+				_logs.push_back(received);
+			}
 		}
 	}
 	_server.close();

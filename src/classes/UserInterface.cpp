@@ -7,8 +7,9 @@
 
 #include "UserInterface.hpp"
 
-Plazza::UserInterface::UserInterface(Plazza::SlavePool &pool)
-	: _pool(pool), _launched(false), _hasToStop(false)
+Plazza::UserInterface::UserInterface(
+	Plazza::SlavePool &pool, Plazza::WorkerOutputHandler &output)
+	: _pool(pool), _output(output), _launched(false), _hasToStop(false)
 {
 }
 
@@ -48,9 +49,45 @@ std::string Plazza::UserInterface::_router(
 {
 	_lastRes = "{ \"method\": \"" + method + "\", \"path\": \"" + path +
 		"\" }";
+	_endpointHome(method, path);
+	_endpointLog(method, path);
 	_endpointScrap(method, path);
 	_endpointSlaves(method, path);
 	return _lastRes;
+}
+
+void Plazza::UserInterface::_endpointHome(
+	const std::string &, const std::string &path)
+{
+	std::cmatch cm;
+	std::fstream fs;
+
+	if (std::regex_search(path.c_str(), cm, std::regex("^/$"))) {
+		fs.open(_homePath, std::fstream::in);
+		if (!fs.is_open())
+			return;
+		_lastRes = "";
+		std::string temp;
+		while (std::getline(fs, temp))
+			_lastRes += temp;
+	}
+	fs.close();
+}
+
+void Plazza::UserInterface::_endpointLog(
+	const std::string &, const std::string &path)
+{
+	std::cmatch cm;
+	std::fstream fs;
+
+	if (std::regex_search(path.c_str(), cm, std::regex("^/log/?$"))) {
+		if (!_output.hasLogPending()) {
+			_lastRes = "{\"error\": \"no log is pending\"}";
+			return;
+		}
+		_lastRes = "{\"result\": \"" + _output.getLogLine() + "\"}";
+		_output.popLogLine();
+	}
 }
 
 void Plazza::UserInterface::_endpointSlaves(
@@ -58,7 +95,7 @@ void Plazza::UserInterface::_endpointSlaves(
 {
 	std::cmatch cm;
 
-	if (std::regex_search(path.c_str(), cm, std::regex("^/slaves/$"))) {
+	if (std::regex_search(path.c_str(), cm, std::regex("^/slaves/?$"))) {
 	}
 }
 

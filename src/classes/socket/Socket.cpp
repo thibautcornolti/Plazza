@@ -60,17 +60,16 @@ bool Socket::isDataPending()
 
 std::string Socket::receive()
 {
-	char buffer[1025] = {0};
+	char buffer[2] = {0};
 	static std::string s = "";
 
 	while (strchr(s.c_str(), '\n') == 0) {
-		int size = read(_socket, buffer, 1024);
+		int size = read(_socket, buffer, 1);
 		if (size == -1)
 			printf("errno: %d\n", errno);
 		else if (size == 0)
 			throw std::exception();
 		buffer[size] = 0;
-		// printf("buffer: '%s'\n", buffer);
 		s += buffer;
 	}
 	int idx = strchr(s.c_str(), '\n') - s.c_str();

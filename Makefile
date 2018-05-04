@@ -19,6 +19,7 @@ LIST	=	classes/Task				\
 		classes/SlavePool			\
 		classes/ForkedSlave			\
 		classes/Parser				\
+		classes/Scrapper			\
 		classes/Fork				\
 		classes/UserInterface			\
 		classes/WebServer			\

@@ -11,6 +11,7 @@
 #include <poll.h>
 #include <sys/stat.h>
 #include <vector>
+#include <list>
 #include <thread>
 #include <condition_variable>
 #include <string>
@@ -23,6 +24,9 @@ namespace Plazza {
 		~WorkerOutputHandler();
 
 		std::string getPath();
+		bool hasLogPending();
+		std::string getLogLine();
+		void popLogLine();
 
 	protected:
 	private:
@@ -35,5 +39,6 @@ namespace Plazza {
 		std::string _path;
 		ServerUnixSocket _server;
 		std::vector<UnixSocket> _clients;
+		std::list<std::string> _logs;
 	};
 };
