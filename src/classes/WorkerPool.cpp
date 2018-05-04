@@ -41,14 +41,14 @@ Plazza::Worker &Plazza::WorkerPool::getBestWorker()
 			minWorker = i;
 			minLoad = _workers[i]->getLoad();
 		}
-	printf("[WorkerPool] Using worker %d (with load %d)\n", minWorker,
+	dprintf(2, "[WorkerPool] Using worker %d (with load %d)\n", minWorker,
 		minLoad);
 	return *_workers[minWorker].get();
 }
 
 void Plazza::WorkerPool::pushTask(const Plazza::Task task)
 {
-	printf("[WorkerPool] Available power %d\n", getAvailablePower());
+	dprintf(2, "[WorkerPool] Available power %d\n", getAvailablePower());
 	getBestWorker().pushTask(task);
 }
 

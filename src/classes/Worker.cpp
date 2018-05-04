@@ -55,16 +55,18 @@ void Plazza::Worker::pushTask(const Plazza::Task task)
 void Plazza::Worker::join()
 {
 	if (_thread.joinable()) {
+		dprintf(2, "Joining\n");
 		_thread.join();
+		dprintf(2, "Joined\n");
 		_isRunning = false;
 	}
 }
 
 void Plazza::Worker::_run()
 {
-	printf("[WORKER %lu:%lu] Thread started\n", _slaveID, _workerID);
+	dprintf(2, "[WORKER %lu:%lu] Thread started\n", _slaveID, _workerID);
 	_logger = ClientUnixSocket(_loggerName);
-	dprintf(1, "[WORKER %lu:%lu] Logging to %s\n", _slaveID, _workerID,
+	dprintf(2, "[WORKER %lu:%lu] Logging to %s\n", _slaveID, _workerID,
 		_loggerName.c_str());
 	while (1) {
 		_mutex.lock();
@@ -84,14 +86,15 @@ void Plazza::Worker::_run()
 		_parse(task);
 		_isWorking = false;
 	}
-	printf("[WORKER %lu:%lu] Thread finished\n", _slaveID, _workerID);
+	dprintf(2, "[WORKER %lu:%lu] Thread finished\n", _slaveID, _workerID);
 }
 
 void Plazza::Worker::_parse(Plazza::Task &task)
 {
-	printf("[WORKER %lu:%lu] Thread is working\n", _slaveID, _workerID);
+	dprintf(2, "[WORKER %lu:%lu] Thread is working\n", _slaveID,
+		_workerID);
 	Plazza::Scrapper s(task, _logger);
 	s.startScrapper();
-	printf("[WORKER %lu:%lu] Thread is not working anymore\n", _slaveID,
-		_workerID);
+	dprintf(2, "[WORKER %lu:%lu] Thread is not working anymore\n",
+		_slaveID, _workerID);
 }
