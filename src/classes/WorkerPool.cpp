@@ -7,11 +7,13 @@
 
 #include "WorkerPool.hpp"
 #include <algorithm>
+#include <unistd.h>
 
 Plazza::WorkerPool::WorkerPool(
 	size_t id, size_t threadCount, const std::string &loggerName)
 	: _id(id), _threadCount(threadCount), _loggerName(loggerName)
 {
+	dprintf(2, "WORKERPOOL %d\n", getpid());
 	_workers.reserve(_threadCount);
 	for (size_t i = 0; i < _threadCount; i++)
 		_workers.push_back(
@@ -72,9 +74,9 @@ void Plazza::WorkerPool::exit()
 	std::for_each(_workers.begin(), _workers.end(),
 		[&](std::unique_ptr<Plazza::Worker> &worker) {
 			worker->pushTask(Plazza::Task());
-			dprintf(2, "[Slave %d] EXIT pushed to Worker %d\n",
-				_id, i);
 			i += 1;
 		});
+	dprintf(2, "[WORKERPOOL %lu] CLEAR\n", _id);
 	_workers.clear();
+	dprintf(2, "[WORKERPOOL %lu] OK\n", _id);
 }

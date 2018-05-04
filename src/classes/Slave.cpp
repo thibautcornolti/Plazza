@@ -113,19 +113,11 @@ void Plazza::Slave::exit()
 {
 	if (_fork.isChild()) {
 		_pool.exit();
-		dprintf(2, "__EXIIT__\n");
-		// std::this_thread::sleep_for(std::chrono::seconds(5));
-		// dprintf(2, "fils: pid: %d %d\n", getpid(), _fork.getPid());
 		::exit(0);
 	}
 	else {
-		dprintf(2, "perr: pid: %d %d\n", getpid(), _fork.getPid());
-		dprintf(2, "SENDED EXIT TO FORK\n");
 		_fork.getSocket().send("EXIT\n");
-		dprintf(2, "SENDED WAIT TO FORK\n");
-		std::this_thread::sleep_for(std::chrono::seconds(2));
 		_fork.wait();
-		dprintf(2, "WAITED TO FORK\n");
 	}
 }
 

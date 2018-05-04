@@ -23,7 +23,7 @@ static void atFork(
 	Plazza::WorkerOutputHandler *output, Plazza::UserInterface *ui)
 {
 	dprintf(2, "atFork called\n");
-	ui->stop();
+	// ui->stop();
 	output->stop();
 }
 
@@ -33,8 +33,8 @@ void run()
 	Plazza::Parser p;
 	Plazza::WorkerOutputHandler output;
 	Plazza::UserInterface ui;
-	Plazza::SlavePool pool(
-		4, output.getPath(), std::bind(&atFork, &output, &ui));
+	Plazza::SlavePool pool(4, output.getPath(),
+		std::bind(&atFork, &output, nullptr /*&ui*/));
 	ui.launch(pool, output);
 
 	while (1) {
@@ -45,11 +45,8 @@ void run()
 	}
 	ui.stop();
 
-	std::this_thread::sleep_for(std::chrono::seconds(1));
-	output.stop();
 	pool.exit();
-	dprintf(2, "stopping SKAKJDSNQ\n");
-	dprintf(2, "stopped DJqskldj\n");
+	output.stop();
 
 	// TEST SOCKETS
 	// ClientTCPSocket socket("hirevo.eu", 4444);

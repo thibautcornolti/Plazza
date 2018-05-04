@@ -63,23 +63,42 @@ void Plazza::WorkerOutputHandler::_run()
 	while (!_hasToStop) {
 		_threadCond.notify_all();
 		_waitEvent();
-		if (_server.isDataPending()) {
-			_clients.push_back(_server.accept());
-			continue;
-		}
-		for (auto &client : _clients) {
-			std::string received;
+		_listenNewClients();
+		_readClients();
+	}
+	_server.close();
+	remove(_path.c_str());
+	dprintf(2, "[OUTPUT %d] stopped!\n", getpid());
+	_isRunning = false;
+}
+
+void Plazza::WorkerOutputHandler::_listenNewClients()
+{
+	if (_server.isDataPending())
+		_clients.push_back(_server.accept());
+}
+
+void Plazza::WorkerOutputHandler::_readClients()
+{
+	std::vector<UnixSocket> cl;
+
+	cl.reserve(_clients.size());
+	for (auto &client : _clients) {
+		std::string received;
+		try {
 			while (client.isDataPending()) {
 				received = client.receive();
 				dprintf(1, "%s\n", received.c_str());
 				_logs.push_back(received);
 			}
 		}
+		catch (std::exception) {
+			client.close();
+			continue;
+		}
+		cl.emplace_back(client);
 	}
-	_server.close();
-	remove(_path.c_str());
-	dprintf(2, "[OUTPUT %d] stopped!\n", getpid());
-	_isRunning = false;
+	_clients = cl;
 }
 
 void Plazza::WorkerOutputHandler::_waitEvent()

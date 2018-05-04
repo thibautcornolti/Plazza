@@ -32,6 +32,8 @@ namespace Plazza {
 	protected:
 	private:
 		void _run();
+		void _listenNewClients();
+		void _readClients();
 		void _waitEvent();
 
 		bool _hasToStop;
