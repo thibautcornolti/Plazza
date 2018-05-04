@@ -37,6 +37,9 @@ int main(int ac, char **av)
 	}
 	ui.stop();
 	pool.exit();
+	dprintf(2, "stopping SKAKJDSNQ\n");
+	output.stop();
+	dprintf(2, "stopped DJqskldj\n");
 
 	// TEST SOCKETS
 	// ClientTCPSocket socket("hirevo.eu", 4444);
@@ -59,5 +62,6 @@ int main(int ac, char **av)
 	// ClientUnixSocket u(w.getPath());
 	// u.send("oui!\n");
 	// std::this_thread::sleep_for(std::chrono::seconds(1));
+	dprintf(2, "end of ALL\n");
 	return 0;
 }

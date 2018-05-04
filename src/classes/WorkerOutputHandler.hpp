@@ -27,13 +27,14 @@ namespace Plazza {
 		bool hasLogPending();
 		std::string getLogLine();
 		void popLogLine();
+		void stop();
 
 	protected:
 	private:
 		void _run();
 		void _waitEvent();
 
-		bool _hasToExit;
+		bool _hasToStop;
 		std::thread _thread;
 		std::condition_variable _threadCond;
 		std::string _path;

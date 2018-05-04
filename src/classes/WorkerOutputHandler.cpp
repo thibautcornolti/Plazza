@@ -8,7 +8,7 @@
 #include "WorkerOutputHandler.hpp"
 
 Plazza::WorkerOutputHandler::WorkerOutputHandler()
-	: _hasToExit(false),
+	: _hasToStop(false),
 	  _path(".sockets/wouthandler_" +
 		  std::to_string(getpid() * time(NULL)) + ".sock"),
 	  _clients(0),
@@ -22,8 +22,7 @@ Plazza::WorkerOutputHandler::WorkerOutputHandler()
 
 Plazza::WorkerOutputHandler::~WorkerOutputHandler()
 {
-	_hasToExit = true;
-	_thread.join();
+	stop();
 }
 
 std::string Plazza::WorkerOutputHandler::getPath()
@@ -46,11 +45,22 @@ void Plazza::WorkerOutputHandler::popLogLine()
 	_logs.pop_front();
 }
 
+void Plazza::WorkerOutputHandler::stop()
+{
+	_hasToStop = true;
+	dprintf(2, "Output stopping\n");
+	if (_thread.joinable()) {
+		dprintf(2, "Output joining\n");
+		_thread.join();
+		dprintf(2, "Output joined\n");
+	}
+}
+
 void Plazza::WorkerOutputHandler::_run()
 {
 	mkdir(".sockets", S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 	_server = ServerUnixSocket(_path);
-	while (!_hasToExit) {
+	while (!_hasToStop) {
 		_threadCond.notify_all();
 		_waitEvent();
 		if (_server.isDataPending()) {
@@ -68,6 +78,7 @@ void Plazza::WorkerOutputHandler::_run()
 	}
 	_server.close();
 	remove(_path.c_str());
+	dprintf(2, "Output stopped!\n");
 }
 
 void Plazza::WorkerOutputHandler::_waitEvent()
