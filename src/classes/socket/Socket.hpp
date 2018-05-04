@@ -23,6 +23,7 @@ public:
 
 protected:
 	int _socket;
+	std::string _buffer;
 
 private:
 };

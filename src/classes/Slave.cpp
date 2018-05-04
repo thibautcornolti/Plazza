@@ -10,8 +10,10 @@
 #include <map>
 #include <sstream>
 
-Plazza::Slave::Slave(unsigned workerCount, const std::string &loggerName)
-	: _pool(workerCount, loggerName), _fork(), _loggerName(loggerName)
+Plazza::Slave::Slave(
+	size_t id, unsigned workerCount, const std::string &loggerName)
+	: _id(id), _pool(_id, workerCount, loggerName), _fork(),
+	  _loggerName(loggerName)
 {
 	std::map<std::string,
 		void (Plazza::Slave::*)(std::istringstream & input)>
@@ -56,6 +58,7 @@ unsigned Plazza::Slave::getLoad()
 		// std::cout << "|=> " << ret << std::endl;
 		return ret;
 	}
+	return 0;
 }
 
 void Plazza::Slave::pushTask(const Plazza::Task task)
@@ -81,6 +84,7 @@ unsigned Plazza::Slave::getTotalPower()
 		// std::cout << "|=> " << ret << std::endl;
 		return ret;
 	}
+	return 0;
 }
 
 unsigned Plazza::Slave::getAvailablePower()
@@ -95,6 +99,7 @@ unsigned Plazza::Slave::getAvailablePower()
 		// std::cout << "|=> " << ret << std::endl;
 		return ret;
 	}
+	return 0;
 }
 
 void Plazza::Slave::exit()

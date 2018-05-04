@@ -17,7 +17,7 @@
 namespace Plazza {
 	class Slave : public TaskPusherizer {
 	public:
-		Slave(unsigned, const std::string &);
+		Slave(size_t, unsigned, const std::string &);
 		~Slave();
 
 		void pushTask(const Task);
@@ -34,6 +34,7 @@ namespace Plazza {
 		void handleAvailablePower(std::istringstream &input);
 		void handleExit(std::istringstream &input);
 
+		size_t _id;
 		Worker &getBestWorker();
 		WorkerPool _pool;
 		Fork _fork;

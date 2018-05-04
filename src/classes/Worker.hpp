@@ -18,7 +18,7 @@
 namespace Plazza {
 	class Worker : public TaskPusherizer {
 	public:
-		Worker(const std::string &);
+		Worker(size_t, size_t, const std::string &);
 		~Worker();
 
 		bool isWorking();
@@ -32,6 +32,8 @@ namespace Plazza {
 		void _run();
 		void _parse(Plazza::Task &);
 
+		size_t _slaveID;
+		size_t _workerID;
 		std::thread _thread;
 		std::mutex _mutex;
 		std::condition_variable _threadCond;

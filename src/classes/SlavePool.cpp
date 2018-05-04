@@ -36,8 +36,8 @@ Plazza::Slave &Plazza::SlavePool::getBestSlave()
 
 void Plazza::SlavePool::createSlave()
 {
-	_slaves.push_back(
-		std::make_unique<Plazza::Slave>(_workerCount, _loggerName));
+	_slaves.push_back(std::make_unique<Plazza::Slave>(
+		_slaves.size(), _workerCount, _loggerName));
 }
 
 void Plazza::SlavePool::pushTask(Plazza::Task task)

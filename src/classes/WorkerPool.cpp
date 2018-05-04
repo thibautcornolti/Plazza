@@ -9,13 +9,13 @@
 #include <algorithm>
 
 Plazza::WorkerPool::WorkerPool(
-	size_t threadCount, const std::string &loggerName)
-	: _threadCount(threadCount), _loggerName(loggerName)
+	size_t id, size_t threadCount, const std::string &loggerName)
+	: _id(id), _threadCount(threadCount), _loggerName(loggerName)
 {
 	_workers.reserve(_threadCount);
 	for (size_t i = 0; i < _threadCount; i++)
 		_workers.push_back(
-			std::make_unique<Plazza::Worker>(loggerName));
+			std::make_unique<Plazza::Worker>(_id, i, loggerName));
 }
 
 Plazza::WorkerPool::~WorkerPool()

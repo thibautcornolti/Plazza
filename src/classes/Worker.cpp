@@ -10,9 +10,10 @@
 
 #include "Scrapper.hpp"
 
-Plazza::Worker::Worker(const std::string &loggerName)
-	: _tasks(), _isWorking(false), _isRunning(false),
-	  _loggerName(loggerName)
+Plazza::Worker::Worker(
+	size_t slaveID, size_t workerID, const std::string &loggerName)
+	: _slaveID(slaveID), _workerID(workerID), _tasks(), _isWorking(false),
+	  _isRunning(false), _loggerName(loggerName)
 {
 }
 
@@ -61,9 +62,10 @@ void Plazza::Worker::join()
 
 void Plazza::Worker::_run()
 {
-	printf("[WORKER] Thread started\n");
+	printf("[WORKER %lu:%lu] Thread started\n", _slaveID, _workerID);
 	_logger = ClientUnixSocket(_loggerName);
-	dprintf(1, "[WORKER] Logging to %s\n", _loggerName.c_str());
+	dprintf(1, "[WORKER %lu:%lu] Logging to %s\n", _slaveID, _workerID,
+		_loggerName.c_str());
 	while (1) {
 		_mutex.lock();
 		if (_tasks.empty()) {
@@ -82,13 +84,14 @@ void Plazza::Worker::_run()
 		_parse(task);
 		_isWorking = false;
 	}
-	printf("[WORKER] Thread finished\n");
+	printf("[WORKER %lu:%lu] Thread finished\n", _slaveID, _workerID);
 }
 
 void Plazza::Worker::_parse(Plazza::Task &task)
 {
-	printf("[WORKER] Thread is working\n");
+	printf("[WORKER %lu:%lu] Thread is working\n", _slaveID, _workerID);
 	Plazza::Scrapper s(task, _logger);
 	s.startScrapper();
-	printf("[WORKER] Thread is not working anymore\n");
+	printf("[WORKER %lu:%lu] Thread is not working anymore\n", _slaveID,
+		_workerID);
 }
