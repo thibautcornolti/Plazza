@@ -68,9 +68,12 @@ unsigned Plazza::SlavePool::getAvailablePower()
 
 void Plazza::SlavePool::exit()
 {
+	int i = 0;
 	std::for_each(_slaves.begin(), _slaves.end(),
-		[](std::unique_ptr<Plazza::Slave> &slave) {
-			slave->pushTask(Plazza::Task());
+		[&i](std::unique_ptr<Plazza::Slave> &slave) {
+			dprintf(2, "[SlavePool] EXIT pushed to Slave %d\n", i);
+			slave->exit();
+			i += 1;
 		});
 	_slaves.clear();
 }

@@ -104,8 +104,10 @@ unsigned Plazza::Slave::getAvailablePower()
 
 void Plazza::Slave::exit()
 {
-	if (_fork.isChild())
+	if (_fork.isChild()) {
 		_pool.exit();
+		::exit(0);
+	}
 	else {
 		_fork.getSocket().send("EXIT\n");
 		_fork.wait();

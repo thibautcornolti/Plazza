@@ -68,9 +68,13 @@ unsigned Plazza::WorkerPool::getAvailablePower()
 
 void Plazza::WorkerPool::exit()
 {
+	int i = 0;
 	std::for_each(_workers.begin(), _workers.end(),
-		[](std::unique_ptr<Plazza::Worker> &worker) {
+		[&](std::unique_ptr<Plazza::Worker> &worker) {
 			worker->pushTask(Plazza::Task());
+			dprintf(2, "[Slave %d] EXIT pushed to Worker %d\n",
+				_id, i);
+			i += 1;
 		});
 	_workers.clear();
 }

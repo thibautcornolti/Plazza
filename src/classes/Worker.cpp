@@ -54,7 +54,7 @@ void Plazza::Worker::pushTask(const Plazza::Task task)
 
 void Plazza::Worker::join()
 {
-	if (_thread.joinable()) {
+	while (_thread.joinable()) {
 		dprintf(2, "Joining\n");
 		_thread.join();
 		dprintf(2, "Joined\n");

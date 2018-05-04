@@ -40,22 +40,22 @@ bool Socket::waitData(int timeout)
 	struct pollfd s {
 		.fd = _socket, .events = POLLIN, .revents = 0
 	};
-	bool ret = false;
 
-	while (_socket && _buffer.size() == 0) {
+	if (_socket == 0)
+		return false;
+	while (1) {
 		errno = 0;
-		int state = poll(&s, 1, timeout);
-		if (state == -1 && errno == EAGAIN)
+		int ret = poll(&s, 1, timeout);
+		if (ret == -1 && errno == EAGAIN)
 			continue;
-		ret = (state == 1 && (s.revents & POLLIN) == POLLIN);
-		break;
+		return (ret == 1 && (s.revents & POLLIN) == POLLIN);
 	}
-	return _buffer.size() != 0 || ret;
+	return false;
 }
 
 bool Socket::isDataPending()
 {
-	return _buffer.size() != 0 || Socket::waitData(0);
+	return _buffer.size() !=Socket::waitData(0);
 }
 
 std::string Socket::receive()
@@ -65,7 +65,7 @@ std::string Socket::receive()
 	while (strchr(_buffer.c_str(), '\n') == 0) {
 		int size = read(_socket, buffer, 1);
 		if (size == -1)
-			dprintf(2, "errno: %d\n", errno);
+			printf("errno: %d\n", errno);
 		else if (size == 0)
 			throw std::exception();
 		buffer[size] = 0;
@@ -79,6 +79,8 @@ std::string Socket::receive()
 	_buffer = &(_buffer[idx + 1]);
 	return c;
 }
+
+
 
 void Socket::send(std::string msg)
 {

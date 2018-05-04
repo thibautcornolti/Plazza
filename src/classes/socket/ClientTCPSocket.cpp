@@ -28,6 +28,7 @@ ClientTCPSocket::ClientTCPSocket(int fd) : TCPSocket(fd)
 
 ClientTCPSocket::~ClientTCPSocket()
 {
+	close();
 }
 
 bool ClientTCPSocket::connect(const std::string &host, int port)
