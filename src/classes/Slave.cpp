@@ -10,7 +10,8 @@
 #include <map>
 #include <sstream>
 
-Plazza::Slave::Slave(unsigned workerCount) : _pool(workerCount), _fork()
+Plazza::Slave::Slave(unsigned workerCount, const std::string &loggerName)
+	: _pool(workerCount, loggerName), _fork(), _loggerName(loggerName)
 {
 	std::map<std::string,
 		void (Plazza::Slave::*)(std::istringstream & input)>
@@ -32,7 +33,8 @@ Plazza::Slave::Slave(unsigned workerCount) : _pool(workerCount), _fork()
 			// std::cout << "GOT OPCODE: '" << opcode << "'"
 			// 	  << std::endl;
 			(this->*map.at(opcode))(order);
-		} catch (...) {
+		}
+		catch (...) {
 			std::exit(0);
 		}
 	}

@@ -10,7 +10,9 @@
 
 #include "Scrapper.hpp"
 
-Plazza::Worker::Worker() : _tasks(), _isWorking(false), _isRunning(false)
+Plazza::Worker::Worker(const std::string &loggerName)
+	: _tasks(), _isWorking(false), _isRunning(false),
+	  _loggerName(loggerName)
 {
 }
 
@@ -60,6 +62,8 @@ void Plazza::Worker::join()
 void Plazza::Worker::_run()
 {
 	printf("[WORKER] Thread started\n");
+	_logger = ClientUnixSocket(_loggerName);
+	dprintf(1, "[WORKER] Logging to %s\n", _loggerName.c_str());
 	while (1) {
 		_mutex.lock();
 		if (_tasks.empty()) {
@@ -84,7 +88,7 @@ void Plazza::Worker::_run()
 void Plazza::Worker::_parse(Plazza::Task &task)
 {
 	printf("[WORKER] Thread is working\n");
-	Plazza::Scrapper s(task);
+	Plazza::Scrapper s(task, _logger);
 	s.startScrapper();
 	printf("[WORKER] Thread is not working anymore\n");
 }

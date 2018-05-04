@@ -15,7 +15,7 @@
 namespace Plazza {
 	class WorkerPool : public TaskPusherizer {
 	public:
-		WorkerPool(size_t);
+		WorkerPool(size_t, const std::string &);
 		~WorkerPool();
 		void pushTask(const Plazza::Task) override;
 		unsigned getLoad();
@@ -28,5 +28,6 @@ namespace Plazza {
 		Plazza::Worker &getBestWorker();
 		size_t _threadCount;
 		std::vector<std::unique_ptr<Plazza::Worker>> _workers;
+		std::string _loggerName;
 	};
 };

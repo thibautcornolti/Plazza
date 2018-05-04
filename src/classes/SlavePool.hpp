@@ -14,7 +14,7 @@
 namespace Plazza {
 	class SlavePool : public TaskPusherizer {
 	public:
-		SlavePool(unsigned);
+		SlavePool(unsigned, const std::string &);
 		~SlavePool();
 
 		void pushTask(Task);
@@ -29,5 +29,6 @@ namespace Plazza {
 		int _socket;
 		unsigned _workerCount;
 		std::vector<std::unique_ptr<Slave>> _slaves;
+		std::string _loggerName;
 	};
 };

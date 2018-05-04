@@ -13,11 +13,12 @@
 #include <thread>
 #include "Task.hpp"
 #include "TaskPusherizer.hpp"
+#include "socket/ClientUnixSocket.hpp"
 
 namespace Plazza {
 	class Worker : public TaskPusherizer {
 	public:
-		Worker();
+		Worker(const std::string &);
 		~Worker();
 
 		bool isWorking();
@@ -35,7 +36,9 @@ namespace Plazza {
 		std::mutex _mutex;
 		std::condition_variable _threadCond;
 		std::queue<Plazza::Task> _tasks;
+		ClientUnixSocket _logger;
 		bool _isWorking;
 		bool _isRunning;
+		std::string _loggerName;
 	};
 }

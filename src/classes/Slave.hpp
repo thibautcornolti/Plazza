@@ -17,7 +17,7 @@
 namespace Plazza {
 	class Slave : public TaskPusherizer {
 	public:
-		Slave(unsigned);
+		Slave(unsigned, const std::string &);
 		~Slave();
 
 		void pushTask(const Task);
@@ -37,5 +37,6 @@ namespace Plazza {
 		Worker &getBestWorker();
 		WorkerPool _pool;
 		Fork _fork;
+		std::string _loggerName;
 	};
 };

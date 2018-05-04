@@ -22,18 +22,13 @@ int main(int ac, char **av)
 {
 	// TEST PARSER AND WORKERS
 	Plazza::Parser p;
-	Plazza::SlavePool pool(4);
 	Plazza::WorkerOutputHandler output;
+	Plazza::SlavePool pool(4, output.getPath());
 	ClientUnixSocket u(output.getPath());
 	Plazza::UserInterface ui(pool, output);
 	bool hasTasks = true;
 	ui.launch();
 
-	u.send("1 log!!\n");
-	u.send("2 log!!\n");
-	u.send("3 log!!\n");
-	u.send("4 log!!\n");
-	u.send("5 log!!\n");
 	while (1) {
 		auto task = p.getNextTask();
 		if (task.getType() == Plazza::Task::Type::EXIT)

@@ -7,9 +7,10 @@
 
 #include "Scrapper.hpp"
 
-Plazza::Scrapper::Scrapper(Task &task)
+Plazza::Scrapper::Scrapper(Task &task, ClientUnixSocket &logger)
 {
 	this->_task = task;
+	this->_logger = logger;
 	this->_type = this->_task.getType();
 	this->_criteria = this->_task.getCriteria();
 	this->_file = this->_task.getFile();
@@ -29,7 +30,8 @@ void Plazza::Scrapper::startScrapper()
 	if (ifs)
 		std::getline(ifs, buf, '\0');
 	else
-		std::cerr << "Error: Couldn't open file '" << this->_file << "'" << std::endl;
+		_logger.send(
+			"Error: Couldn't open file '" + this->_file + "'\n");
 	ifs.close();
 	if (this->_criteria == Plazza::Task::Criteria::EMAIL_ADDRESS)
 		r = "[a-zA-Z0-9_\\.-]+@[a-zA-Z0-9_\\.-]+\\.[a-zA-Z0-9_\\.-]+";
@@ -40,7 +42,10 @@ void Plazza::Scrapper::startScrapper()
 	}
 	std::string::const_iterator i(buf.cbegin());
 	while (std::regex_search(i, buf.cend(), m, r)) {
-		std::cout << m[(this->_criteria == Plazza::Task::Criteria::IP_ADDRESS)] << std::endl;
+		_logger.send(m[(this->_criteria ==
+				       Plazza::Task::Criteria::IP_ADDRESS)]
+				     .str() +
+			"\n");
 		i += m.position() + m.length();
 	}
 }

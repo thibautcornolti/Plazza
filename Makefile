@@ -17,7 +17,6 @@ LIST	=	classes/Task				\
 		classes/WorkerOutputHandler		\
 		classes/Slave				\
 		classes/SlavePool			\
-		classes/ForkedSlave			\
 		classes/Parser				\
 		classes/Scrapper			\
 		classes/Fork				\
