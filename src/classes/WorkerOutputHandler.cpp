@@ -53,14 +53,12 @@ void Plazza::WorkerOutputHandler::_run()
 	while (!_hasToExit) {
 		_threadCond.notify_all();
 		_waitEvent();
-		dprintf(1, "[LOGGER] Checking...\n");
 		if (_server.isDataPending()) {
 			dprintf(1, "[LOGGER] Connection!\n");
 			_clients.push_back(_server.accept());
 			continue;
 		}
 		for (auto &client : _clients) {
-			dprintf(1, "[LOGGER] Message!\n");
 			std::string received;
 			while (client.isDataPending()) {
 				received = client.receive();
