@@ -54,7 +54,6 @@ void Plazza::WorkerOutputHandler::_run()
 		_threadCond.notify_all();
 		_waitEvent();
 		if (_server.isDataPending()) {
-			dprintf(1, "[LOGGER] Connection!\n");
 			_clients.push_back(_server.accept());
 			continue;
 		}
@@ -62,7 +61,7 @@ void Plazza::WorkerOutputHandler::_run()
 			std::string received;
 			while (client.isDataPending()) {
 				received = client.receive();
-				dprintf(1, "[LOG] %s\n", received.c_str());
+				dprintf(1, "%s\n", received.c_str());
 				_logs.push_back(received);
 			}
 		}

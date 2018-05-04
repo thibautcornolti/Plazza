@@ -29,7 +29,7 @@ Plazza::Slave &Plazza::SlavePool::getBestSlave()
 			minSlave = i;
 			minLoad = _slaves[i]->getLoad();
 		}
-	printf("[SLAVE POOL] Using slave %d (with load %d)\n", minSlave,
+	dprintf(2, "[SLAVE POOL] Using slave %d (with load %d)\n", minSlave,
 		minLoad);
 	return *_slaves[minSlave];
 }
@@ -42,7 +42,7 @@ void Plazza::SlavePool::createSlave()
 
 void Plazza::SlavePool::pushTask(Plazza::Task task)
 {
-	printf("[SLAVE POOL] Available power %d\n", getAvailablePower());
+	dprintf(2, "[SLAVE POOL] Available power %d\n", getAvailablePower());
 	if (getAvailablePower() == 0)
 		createSlave();
 	getBestSlave().pushTask(task);

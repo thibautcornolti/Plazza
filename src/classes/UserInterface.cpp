@@ -35,13 +35,13 @@ void Plazza::UserInterface::stop()
 
 void Plazza::UserInterface::_run()
 {
-	printf("[UI] Thread started\n");
+	dprintf(2, "[UI] Thread started\n");
 	_srv = WebServer("127.0.0.1", 8181,
 		std::bind(&Plazza::UserInterface::_router, this,
 			std::placeholders::_1, std::placeholders::_2));
-	printf("[UI] Starting at http://127.0.0.1:8181/\n");
+	dprintf(2, "[UI] Starting at http://127.0.0.1:8181/\n");
 	_srv.launch(_hasToStop);
-	printf("[UI] Stopped\n");
+	dprintf(2, "[UI] Stopped\n");
 }
 
 std::string Plazza::UserInterface::_router(

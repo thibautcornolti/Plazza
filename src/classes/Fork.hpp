@@ -8,7 +8,6 @@
 #pragma once
 
 #include "socket/UnixSocket.hpp"
-#include "ForkedSlave.hpp"
 #include <unistd.h>
 #include <stdexcept>
 
