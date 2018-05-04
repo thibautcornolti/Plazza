@@ -8,7 +8,6 @@
 #pragma once
 
 #include "Fork.hpp"
-#include "ForkedSlave.hpp"
 #include "Task.hpp"
 #include "TaskPusherizer.hpp"
 #include "Worker.hpp"
