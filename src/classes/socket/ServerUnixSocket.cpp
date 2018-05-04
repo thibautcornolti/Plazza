@@ -36,7 +36,7 @@ bool ServerUnixSocket::listen(const std::string &path)
 	memset(&addr, 0, sizeof(addr));
 	addr.sun_family = AF_UNIX;
 	memcpy(addr.sun_path, path.c_str(),
-		std::min(path.size(), sizeof(addr.sun_path)) - 1);
+		std::min(sizeof(addr.sun_path) - 1, path.size()));
 	return ::bind(_socket, (const sockaddr *)&addr, sizeof(addr)) == 0 &&
 		::listen(_socket, 1024) == 0;
 }
