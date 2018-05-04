@@ -29,7 +29,8 @@ void Plazza::UserInterface::launch()
 void Plazza::UserInterface::stop()
 {
 	_hasToStop = true;
-	_thread.join();
+	if (_thread.joinable())
+		_thread.join();
 	_launched = false;
 }
 
