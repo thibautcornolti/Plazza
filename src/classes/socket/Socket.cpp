@@ -48,6 +48,7 @@ bool Socket::waitData(int timeout)
 		if (state == -1 && errno == EAGAIN)
 			continue;
 		ret = (state == 1 && (s.revents & POLLIN) == POLLIN);
+		break;
 	}
 	return _buffer.size() != 0 || ret;
 }
