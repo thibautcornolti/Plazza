@@ -78,6 +78,7 @@ void Plazza::Worker::_run()
 			_threadCond.wait(lk);
 		}
 		if (_tasks.empty()) {
+			_mutex.unlock();
 			continue;
 		}
 		auto task = _tasks.front();
