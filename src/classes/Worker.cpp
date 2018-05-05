@@ -93,6 +93,7 @@ void Plazza::Worker::_run()
 		if (_currentTask.getType() == Plazza::Task::Type::EXIT)
 			break;
 		_parse(_currentTask);
+		_currentTask = Plazza::Task();
 		_isWorking = false;
 	}
 	_isWorking = false;

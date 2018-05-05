@@ -15,22 +15,61 @@
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
 
+    function httpGet(theUrl, callback) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.onreadystatechange = function () {
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200 && callback)
+          callback(xmlHttp.responseText);
+      }
+      xmlHttp.open("GET", theUrl, true);
+      xmlHttp.send(null);
+    }
+
+
+    // PUSH TASK
+    function pushTask() {
+      const ip = document.getElementById("customCheckbox1").checked;
+      const email = document.getElementById("customCheckbox2").checked;
+      const phone = document.getElementById("customCheckbox3").checked;
+      const file = document.getElementById("filename").value;
+      if (ip)
+        httpGet(`/scrap/IP_ADDRESS/${file}`);
+      if (email)
+        httpGet(`/scrap/EMAIL_ADDRESS/${file}`);
+      if (phone)
+        httpGet(`/scrap/PHONE_NUMBER/${file}`);
+    }
+
 
     // CONSOLE HANDLER
-    function httpGet(theUrl) {
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.open("GET", theUrl, false);
-      xmlHttp.send(null);
-      return xmlHttp.responseText;
-    }
     setInterval(function () {
       const elem = document.getElementById("log");
-      let res = JSON.parse(httpGet('/log'))['result'];
-      if (res) {
-        elem.innerHTML += `<p><span style="color: #66CC00">$></span> ${res}</p>`;
-        elem.scrollTop = elem.scrollHeight;
-      }
-    }, 250);
+      httpGet('/log', function (raw) {
+        let res = JSON.parse(raw)['result'];
+        if (res) {
+          elem.innerHTML += `<p><span style="color: #66CC00">$></span> ${res}</p>`;
+          elem.scrollTop = elem.scrollHeight;
+        }
+      });
+    }, 500);
+
+
+    //TABLE HANDLER
+    setInterval(function () {
+      const elem = document.getElementById("body-worker");
+      httpGet('/task', function (raw) {
+        let res = JSON.parse(raw);
+        elem.innerHTML = '';
+        for (let slave in res)
+          for (let worker in res[slave]) {
+            let file = res[slave][worker]["file"];
+            let criteria = res[slave][worker]["criteria"];
+            file = (file.length == 0 ? '/' : file);
+            criteria = (criteria.length == 0 ? 'WAITING' : criteria);
+            elem.innerHTML += `<tr><th scope="row">${slave}</th><th scope="row">${worker}</th><td>${file}</td><td>${criteria}</td></tr>`;
+          }
+      });
+    }, 1000);
 
 
     // CHART HANDLER
@@ -42,46 +81,50 @@
       }, 1000);
     });
 
-    function doTab() {
-      var i;
-      var j;
-      let array = [];
-      let res = JSON.parse(httpGet('/state'));
-      if (res && res["0"]) {
-        for (let slave in res) {
-          let bar = [""];
-          for (let worker in res[slave])
-            bar.push("Current load");
-          array.push(bar);
-          break ;
+    function doTab(callback) {
+      httpGet('/state', function (raw) {
+        var i;
+        var j;
+        let array = [];
+        let res = JSON.parse(raw);
+        if (res && res["0"]) {
+          for (let slave in res) {
+            let bar = [""];
+            for (let worker in res[slave])
+              bar.push("Current load");
+            array.push(bar);
+            break;
+          }
+          for (let slave in res) {
+            let bar = [`Slave ${slave}`];
+            for (let worker in res[slave])
+              bar.push(res[slave][worker]);
+            array.push(bar);
+          }
+        } else {
+          array.push(["", "Current load"])
         }
-        for (let slave in res) {
-          let bar = [`Slave ${slave}`];
-          for (let worker in res[slave])
-            bar.push(res[slave][worker]);
-          array.push(bar);
-        }
-      } else {
-        array.push(["", "Current load"])
-      }
-      return array;
+        callback(array);
+      });
     }
 
     function drawChart(chart) {
-      var data = google.visualization.arrayToDataTable(doTab());
+      doTab(function (tab) {
+        var data = google.visualization.arrayToDataTable(tab);
 
-      var options = {
-        width: 500,
-        height: 400,
-        backgroundColor: { fill: 'transparent' },
-        legend: { position: "none" },
-        bar: { groupWidth: "80%" },
-        colors: ["#3399FF", "#66B2FF", "#0080FF", "#0066CC"],
-        chart: {
-          title: '',
-        }
-      };
-      chart.draw(data, google.charts.Bar.convertOptions(options));
+        var options = {
+          width: 500,
+          height: 400,
+          backgroundColor: { fill: 'transparent' },
+          legend: { position: "none" },
+          bar: { groupWidth: "80%" },
+          colors: ["#3399FF", "#66B2FF", "#0080FF", "#0066CC"],
+          chart: {
+            title: '',
+          }
+        };
+        chart.draw(data, google.charts.Bar.convertOptions(options));
+      });
     }
 
 
@@ -106,6 +149,10 @@
       line-height: 3px;
     }
 
+    .table-worker {
+      max-height: 280px;
+    }
+
     .title-log {
       position: absolute;
       top: 18%;
@@ -127,7 +174,7 @@
 
 <body>
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Plazza hom page</a>
+    <a class="navbar-brand" href="#">Plazza home page</a>
   </nav>
   <!-- <div class="donut-lb" id="donutchart"></div> -->
   <div id="columnchart_material" class="col-chart"></div>
@@ -167,46 +214,30 @@
       </table>
     </div>
     <div class "input" style="width:15.8%;">
-      <input type="text" class="form-control" placeholder="Enter pathname" aria-describedby="pathname">
+      <input id="filename" type="text" class="form-control" placeholder="Enter pathname" aria-describedby="pathname">
     </div>
     <main class="col-xl-2 py-md-3 pl-md-1 bd-content" role="main">
       <div class="prev-input py-3">
         <div class="float-right submit">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary" onclick="pushTask()">Submit</button>
         </div>
       </div>
     </main>
     <h1 class="py-4 mt-5">Thread Status</h1>
-    <table class="table table-borderless table-striped">
-      <thead class="thead-dark">
-        <tr>
-          <th scope="col">Slave</th>
-          <th scope="col">Worker</th>
-          <th scope="col">File</th>
-          <th scope="col">Mission</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <th scope="row">1</th>
-          <td>company.csv</td>
-          <td>IP ADDRESS</td>
-        </tr>
-        <tr>
-          <th scope="row">1</th>
-          <th scope="row">2</th>
-          <td>memo.txt</td>
-          <td>EMAIL ADDRESS</td>
-        </tr>
-        <tr>
-          <th scope="row">1</th>
-          <th scope="row">3</th>
-          <td>phone.txt</td>
-          <td>PHONE NUMBER</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-worker" style="overflow: auto">
+      <table class="table table-borderless table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Slave</th>
+            <th scope="col">Worker</th>
+            <th scope="col">File</th>
+            <th scope="col">Mission</th>
+          </tr>
+        </thead>
+        <tbody id="body-worker">
+        </tbody>
+      </table>
+    </div>
   </div>
   </div>
 </body>

@@ -87,12 +87,16 @@ void Plazza::UserInterface::_endpointLog(
 	std::fstream fs;
 
 	if (std::regex_search(path.c_str(), cm, std::regex("^/log/?$"))) {
+		dprintf(2, "[Log Endpoint] start\n");
 		if (!_output->hasLogPending()) {
 			_lastRes = "{\"error\": \"no log is pending\"}";
+			dprintf(2, "[Log Endpoint]nothing\n");
 			return;
 		}
 		_lastRes = "{\"result\": \"" + _output->getLogLine() + "\"}";
+		dprintf(2, "[Log Endpoint]popping\n");
 		_output->popLogLine();
+		dprintf(2, "[Log Endpoint]popped\n");
 	}
 }
 
@@ -133,7 +137,7 @@ void Plazza::UserInterface::_endpointTask(
 				_lastRes += "\"" + std::to_string(wo) +
 					"\": { \"file\": \"" +
 					r[sl][wo].getFile() +
-					"\", \"type\": \"" +
+					"\", \"criteria\": \"" +
 					r[sl][wo].getStringifiedCriteria() +
 					"\"},";
 			_lastRes.back() = '}';
