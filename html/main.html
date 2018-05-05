@@ -83,8 +83,6 @@
 
     function doTab(callback) {
       httpGet('/state', function (raw) {
-        var i;
-        var j;
         let array = [];
         let res = JSON.parse(raw);
         if (res && res["0"]) {
