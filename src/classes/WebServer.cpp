@@ -6,6 +6,7 @@
 */
 
 #include "WebServer.hpp"
+#include <unistd.h>
 
 WebServer::WebServer(const std::string &ip, int port, const Router &router)
 	: _ip(ip), _port(port), _socket(ip, port), _sockets(0), _router(router)
@@ -19,23 +20,26 @@ WebServer::~WebServer()
 void WebServer::launch(bool &hasToStop)
 {
 	while (!hasToStop) {
-		_waitEvent();
-		if (_socket.isDataPending()) {
-			TCPSocket client = _socket.accept();
-			std::string inputs;
-			do {
-				inputs = client.receive();
-				_ingestHeader(inputs);
-			} while (inputs != "\r");
-			auto res = _router(_lastMethod, _lastPath);
-			client.send("HTTP/1.1 200 OK\r\n"
-				    "Content-Type: text/html\r\n"
-				    "Content-Length: " +
-				std::to_string(res.length()) + "\r\n\r\n");
-			client.send(res);
-			client.close();
+		try {
+			_waitEvent();
+			if (_socket.isDataPending()) {
+				TCPSocket client = _socket.accept();
+				std::string inputs;
+				do {
+					inputs = client.receive();
+					_ingestHeader(inputs);
+				} while (inputs != "\r");
+				auto res = _router(_lastMethod, _lastPath);
+				client.send("HTTP/1.1 200 OK\r\n"
+					    "Content-Type: text/html\r\n"
+					    "Content-Length: " +
+					std::to_string(res.length()) +
+					"\r\n\r\n");
+				client.send(res);
+				client.close();
+			}
 		}
-		else {
+		catch (std::exception) {
 		}
 	}
 }

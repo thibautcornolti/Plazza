@@ -19,22 +19,20 @@
 #include <iostream>
 #include <thread>
 
-static void atFork(
-	Plazza::WorkerOutputHandler *output, Plazza::UserInterface *ui)
+static void atFork(Plazza::WorkerOutputHandler *output)
 {
 	dprintf(2, "atFork called\n");
-	// ui->stop();
 	output->stop();
 }
 
-void run()
+void run(int nb)
 {
 	// TEST PARSER AND WORKERS
 	Plazza::Parser p;
 	Plazza::WorkerOutputHandler output;
 	Plazza::UserInterface ui;
-	Plazza::SlavePool pool(4, output.getPath(),
-		std::bind(&atFork, &output, nullptr /*&ui*/));
+	Plazza::SlavePool pool(
+		nb, output.getPath(), std::bind(&atFork, &output));
 	ui.launch(pool, output);
 
 	while (1) {
@@ -74,7 +72,7 @@ void run()
 int main(int ac, char **av)
 {
 	try {
-		run();
+		run(2);
 	}
 	catch (...) {
 	}
