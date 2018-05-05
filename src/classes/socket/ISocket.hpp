@@ -11,7 +11,6 @@
 
 class ISocket {
 public:
-
 	virtual void close() = 0;
 	virtual bool waitData(int timeout) = 0;
 	virtual bool isDataPending() = 0;
