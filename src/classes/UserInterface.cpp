@@ -115,7 +115,6 @@ void Plazza::UserInterface::_endpointState(
 				_lastRes += ",";
 		}
 		_lastRes += "}";
-		//_lastRes = std::to_string(_pool->getAvailablePower());
 	}
 }
 
