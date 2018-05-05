@@ -71,6 +71,7 @@ void Plazza::Worker::_run()
 	dprintf(2, "[WORKER %lu:%lu] Logging to %s\n", _slaveID, _workerID,
 		_loggerName.c_str());
 	while (1) {
+		_mutex.lock();
 		if (_tasks.empty()) {
 			std::unique_lock<std::mutex> lk(
 				_mutex, std::defer_lock);
@@ -79,10 +80,9 @@ void Plazza::Worker::_run()
 		if (_tasks.empty()) {
 			continue;
 		}
-		// _mutex.lock();
 		auto task = _tasks.front();
 		_tasks.pop();
-		// _mutex.unlock();
+		_mutex.unlock();
 		_isWorking = true;
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
