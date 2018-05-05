@@ -29,7 +29,8 @@ void Plazza::Slave::launchChild()
 	std::map<std::string,
 		void (Plazza::Slave::*)(std::istringstream & input)>
 		map{{"LOAD", &Plazza::Slave::handleLoad},
-			{"SUMMARY", &Plazza::Slave::handleSummaryLoad},
+			{"SUMMARY_L", &Plazza::Slave::handleSummaryLoad},
+			{"SUMMARY_T", &Plazza::Slave::handleSummaryTask},
 			{"EXIT", &Plazza::Slave::handleExit},
 			{"TASK", &Plazza::Slave::handleTask}};
 
@@ -92,7 +93,7 @@ std::vector<size_t> Plazza::Slave::getSummaryLoad()
 		_fork.getSocket().send(s);
 	}
 	else {
-		_fork.getSocket().send("SUMMARY\n");
+		_fork.getSocket().send("SUMMARY_L\n");
 		std::string rec = _fork.getSocket().receive();
 		std::cmatch cm;
 		size_t offset = 0;
@@ -101,6 +102,40 @@ std::vector<size_t> Plazza::Slave::getSummaryLoad()
 				std::regex("[0-9]+"))) {
 			res.push_back(
 				std::strtoul(cm[0].str().c_str(), 0, 10));
+			offset += cm[0].length() + 1;
+		}
+		dprintf(2, "load: %s\n", rec.c_str());
+	}
+	return res;
+}
+
+std::vector<Plazza::Task> Plazza::Slave::getSummaryTask()
+{
+	std::vector<Plazza::Task> res;
+
+	if (_fork.isChild()) {
+		std::string s = "";
+		for (auto &l : _pool.getSummaryTask()) {
+			std::stringstream ss("");
+			ss << l;
+			s += ss.str();
+			s += ',';
+		}
+		s.back() = '\n';
+		_fork.getSocket().send(s);
+	}
+	else {
+		_fork.getSocket().send("SUMMARY_T\n");
+		std::string rec = _fork.getSocket().receive();
+		std::cmatch cm;
+		size_t offset = 0;
+		while (offset < rec.size() &&
+			std::regex_search(rec.c_str() + offset, cm,
+				std::regex("<Task.*?>"))) {
+			Plazza::Task t;
+			std::stringstream ss(cm[0]);
+			ss >> t;
+			res.push_back(t);
 			offset += cm[0].length() + 1;
 		}
 		dprintf(2, "load: %s\n", rec.c_str());
@@ -137,6 +172,12 @@ void Plazza::Slave::handleSummaryLoad(std::istringstream &input)
 {
 	static_cast<void>(input);
 	Plazza::Slave::getSummaryLoad();
+}
+
+void Plazza::Slave::handleSummaryTask(std::istringstream &input)
+{
+	static_cast<void>(input);
+	Plazza::Slave::getSummaryTask();
 }
 
 void Plazza::Slave::handleExit(std::istringstream &input)

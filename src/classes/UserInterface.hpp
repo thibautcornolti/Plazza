@@ -37,6 +37,7 @@ namespace Plazza {
 		void _endpointLog(const std::string &, const std::string &);
 		void _endpointScrap(const std::string &, const std::string &);
 		void _endpointState(const std::string &, const std::string &);
+		void _endpointTask(const std::string &, const std::string &);
 		std::map<std::string, Plazza::Task::Criteria> _criteriaRefs{
 			{"PHONE_NUMBER", Plazza::Task::Criteria::PHONE_NUMBER},
 			{"IP_ADDRESS", Plazza::Task::Criteria::IP_ADDRESS},

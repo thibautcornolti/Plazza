@@ -24,6 +24,7 @@ namespace Plazza {
 		Slave &getBestSlave();
 		unsigned getLoad();
 		std::vector<std::vector<size_t>> getSummaryLoad();
+		std::vector<std::vector<Plazza::Task>> getSummaryTask();
 		void exit();
 
 	protected:

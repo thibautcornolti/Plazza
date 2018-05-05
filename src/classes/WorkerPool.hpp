@@ -21,6 +21,7 @@ namespace Plazza {
 		void pushTask(const Plazza::Task) override;
 		unsigned getLoad();
 		std::vector<size_t> getSummaryLoad();
+		std::vector<Plazza::Task> getSummaryTask();
 		void exit();
 
 	protected:

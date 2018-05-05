@@ -29,6 +29,11 @@ unsigned Plazza::Worker::getLoad()
 	return _tasks.size() + _isWorking;
 }
 
+Plazza::Task Plazza::Worker::getTask()
+{
+	return _currentTask;
+}
+
 bool Plazza::Worker::isWorking()
 {
 	return _isWorking;
@@ -81,13 +86,13 @@ void Plazza::Worker::_run()
 			_mutex.unlock();
 			continue;
 		}
-		auto task = _tasks.front();
+		_currentTask = _tasks.front();
 		_tasks.pop();
 		_mutex.unlock();
 		_isWorking = true;
-		if (task.getType() == Plazza::Task::Type::EXIT)
+		if (_currentTask.getType() == Plazza::Task::Type::EXIT)
 			break;
-		_parse(task);
+		_parse(_currentTask);
 		_isWorking = false;
 	}
 	_isWorking = false;

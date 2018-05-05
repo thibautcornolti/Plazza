@@ -63,6 +63,16 @@ std::vector<size_t> Plazza::WorkerPool::getSummaryLoad()
 	return res;
 }
 
+std::vector<Plazza::Task> Plazza::WorkerPool::getSummaryTask()
+{
+	std::vector<Plazza::Task> res;
+
+	res.reserve(_workers.size());
+	for (auto &w : _workers)
+		res.emplace_back(w->getTask());
+	return res;
+}
+
 void Plazza::WorkerPool::exit()
 {
 	int i = 0;

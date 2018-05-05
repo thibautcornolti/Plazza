@@ -24,6 +24,7 @@ namespace Plazza {
 		bool isWorking();
 		bool isRunning() const;
 		unsigned getLoad();
+		Task getTask();
 		void join();
 		void pushTask(const Task);
 
@@ -38,6 +39,7 @@ namespace Plazza {
 		std::mutex _mutex;
 		std::condition_variable _threadCond;
 		std::queue<Plazza::Task> _tasks;
+		Plazza::Task _currentTask;
 		ClientUnixSocket _logger;
 		bool _isWorking;
 		bool _isRunning;

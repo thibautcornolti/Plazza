@@ -33,6 +33,7 @@ namespace Plazza {
 		Type getType() const;
 		const std::string &getFile() const;
 		Criteria getCriteria() const;
+		std::string getStringifiedCriteria() const;
 
 		void setType(Type type);
 		void setFile(const std::string &file);

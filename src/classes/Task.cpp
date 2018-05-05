@@ -48,6 +48,15 @@ Plazza::Task::Criteria Plazza::Task::getCriteria() const
 	return _criteria;
 }
 
+std::string Plazza::Task::getStringifiedCriteria() const
+{
+	std::map<Plazza::Task::Criteria, std::string> crit{
+		{Plazza::Task::Criteria::IP_ADDRESS, "IP_ADDRESS"},
+		{Plazza::Task::Criteria::PHONE_NUMBER, "PHONE_NUMBER"},
+		{Plazza::Task::Criteria::EMAIL_ADDRESS, "EMAIL_ADDRESS"}};
+	return (getType() == Plazza::Task::EXIT ? "" : crit.at(getCriteria()));
+}
+
 void Plazza::Task::setType(Plazza::Task::Type type)
 {
 	_type = type;
@@ -69,15 +78,11 @@ std::ostream &operator<<(std::ostream &s, const Plazza::Task &task)
 		{Plazza::Task::Type::SCRAP, "Scrap"},
 		{Plazza::Task::Type::EXIT, "Exit"},
 		{Plazza::Task::Type::NOOP, "No-op"}};
-	std::map<Plazza::Task::Criteria, std::string> crit{
-		{Plazza::Task::Criteria::IP_ADDRESS, "IP_ADDRESS"},
-		{Plazza::Task::Criteria::PHONE_NUMBER, "PHONE_NUMBER"},
-		{Plazza::Task::Criteria::EMAIL_ADDRESS, "EMAIL_ADDRESS"}};
 
 	s << "<Task " << type.at(task.getType());
 	if (task.getType() == Plazza::Task::Type::SCRAP) {
 		s << " " << task.getFile() << " ";
-		s << crit.at(task.getCriteria());
+		s << task.getStringifiedCriteria();
 	}
 	s << ">";
 	return s;

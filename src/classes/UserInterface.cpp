@@ -58,6 +58,7 @@ std::string Plazza::UserInterface::_router(
 	_endpointLog(method, path);
 	_endpointScrap(method, path);
 	_endpointState(method, path);
+	_endpointTask(method, path);
 	return _lastRes;
 }
 
@@ -110,6 +111,33 @@ void Plazza::UserInterface::_endpointState(
 				_lastRes += "\"" + std::to_string(wo) +
 					"\": " + std::to_string(r[sl][wo]) +
 					",";
+			_lastRes.back() = '}';
+			if (sl + 1 != r.size())
+				_lastRes += ",";
+		}
+		_lastRes += "}";
+	}
+}
+
+void Plazza::UserInterface::_endpointTask(
+	const std::string &, const std::string &path)
+{
+	std::cmatch cm;
+
+	if (std::regex_search(path.c_str(), cm, std::regex("^/task/?$"))) {
+		dprintf(2, "task\n");
+		_lastRes = "{";
+		std::vector<std::vector<Plazza::Task>> r =
+			_pool->getSummaryTask();
+		for (size_t sl = 0; sl < r.size(); ++sl) {
+			_lastRes += "\"" + std::to_string(sl) + "\": {";
+			for (size_t wo = 0; wo < r[sl].size(); ++wo)
+				_lastRes += "\"" + std::to_string(wo) +
+					"\": { \"file\": \"" +
+					r[sl][wo].getFile() +
+					"\", \"type\": \"" +
+					r[sl][wo].getStringifiedCriteria() +
+					"\"},";
 			_lastRes.back() = '}';
 			if (sl + 1 != r.size())
 				_lastRes += ",";

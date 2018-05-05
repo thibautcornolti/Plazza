@@ -25,6 +25,7 @@ namespace Plazza {
 		void pushTask(const Task);
 		unsigned getLoad();
 		std::vector<size_t> getSummaryLoad();
+		std::vector<Plazza::Task> getSummaryTask();
 		void exit();
 
 	protected:
@@ -32,6 +33,7 @@ namespace Plazza {
 		void handleTask(std::istringstream &input);
 		void handleLoad(std::istringstream &input);
 		void handleSummaryLoad(std::istringstream &input);
+		void handleSummaryTask(std::istringstream &input);
 		void handleExit(std::istringstream &input);
 
 		size_t _id;

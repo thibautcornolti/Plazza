@@ -65,6 +65,16 @@ std::vector<std::vector<size_t>> Plazza::SlavePool::getSummaryLoad()
 	return res;
 }
 
+std::vector<std::vector<Plazza::Task>> Plazza::SlavePool::getSummaryTask()
+{
+	std::vector<std::vector<Plazza::Task>> res;
+
+	res.reserve(_slaves.size());
+	for (auto &s : _slaves)
+		res.emplace_back(s->getSummaryTask());
+	return res;
+}
+
 void Plazza::SlavePool::exit()
 {
 	int i = 0;
