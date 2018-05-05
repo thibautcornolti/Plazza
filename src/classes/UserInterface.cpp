@@ -102,7 +102,6 @@ void Plazza::UserInterface::_endpointState(
 	std::cmatch cm;
 
 	if (std::regex_search(path.c_str(), cm, std::regex("^/state/?$"))) {
-		dprintf(2, "state\n");
 		_lastRes = "{";
 		std::vector<std::vector<size_t>> r = _pool->getSummaryLoad();
 		for (size_t sl = 0; sl < r.size(); ++sl) {
@@ -125,7 +124,6 @@ void Plazza::UserInterface::_endpointTask(
 	std::cmatch cm;
 
 	if (std::regex_search(path.c_str(), cm, std::regex("^/task/?$"))) {
-		dprintf(2, "task\n");
 		_lastRes = "{";
 		std::vector<std::vector<Plazza::Task>> r =
 			_pool->getSummaryTask();

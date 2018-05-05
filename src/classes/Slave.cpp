@@ -104,7 +104,6 @@ std::vector<size_t> Plazza::Slave::getSummaryLoad()
 				std::strtoul(cm[0].str().c_str(), 0, 10));
 			offset += cm[0].length() + 1;
 		}
-		dprintf(2, "load: %s\n", rec.c_str());
 	}
 	return res;
 }
@@ -138,7 +137,6 @@ std::vector<Plazza::Task> Plazza::Slave::getSummaryTask()
 			res.push_back(t);
 			offset += cm[0].length() + 1;
 		}
-		dprintf(2, "load: %s\n", rec.c_str());
 	}
 	return res;
 }

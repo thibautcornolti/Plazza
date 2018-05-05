@@ -13,58 +13,74 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
-    function httpGetChart(theUrl) {
+
+
+    // CONSOLE HANDLER
+    function httpGet(theUrl) {
       var xmlHttp = new XMLHttpRequest();
       xmlHttp.open("GET", theUrl, false);
       xmlHttp.send(null);
       return xmlHttp.responseText;
     }
+    setInterval(function () {
+      const elem = document.getElementById("log");
+      let res = JSON.parse(httpGet('/log'))['result'];
+      if (res) {
+        elem.innerHTML += `<p><span style="color: #66CC00">$></span> ${res}</p>`;
+        elem.scrollTop = elem.scrollHeight;
+      }
+    }, 250);
+
+
+    // CHART HANDLER
     google.charts.load('current', { 'packages': ['bar'] });
-    google.charts.setOnLoadCallback(function() {
+    google.charts.setOnLoadCallback(function () {
+      var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
       setInterval(function () {
-        drawChart();
+        drawChart(chart);
       }, 1000);
     });
+
     function doTab() {
       var i;
       var j;
       let array = [];
-      array.push(["Slave", "Worker", "Load", "Data"]);
-      array.push(["1", 1000, 400, 200]);
-      // let res = JSON.parse(httpGetChart('/state'))['result'];
-      // if (res) {
-        // for (let slave in data) {
-        //   for (let worker in data[slave])
-        // }
-//      }
+      let res = JSON.parse(httpGet('/state'));
+      if (res && res["0"]) {
+        for (let slave in res) {
+          let bar = [""];
+          for (let worker in res[slave])
+            bar.push("Current load");
+          array.push(bar);
+          break ;
+        }
+        for (let slave in res) {
+          let bar = [`Slave ${slave}`];
+          for (let worker in res[slave])
+            bar.push(res[slave][worker]);
+          array.push(bar);
+        }
+      } else {
+        array.push(["", "Current load"])
+      }
       return array;
     }
-    function drawChart() {
+
+    function drawChart(chart) {
       var data = google.visualization.arrayToDataTable(doTab());
-      //   ['Year', 'Sales', 'Expenses', 'Profit'],
-      //   ['2014', 1000, 400, 200],
-      //   ['2015', 1170, 460, 250],
-      //   ['2016', 660, 1120, 300],
-      //   ['2017', 1030, 540, 350]
-      // ]);
 
       var options = {
+        width: 500,
+        height: 400,
+        backgroundColor: { fill: 'transparent' },
+        legend: { position: "none" },
+        bar: { groupWidth: "80%" },
+        colors: ["#3399FF", "#66B2FF", "#0080FF", "#0066CC"],
         chart: {
           title: '',
-          width: 800,
-          height: 600,
-          backgroundColor: { fill: 'transparent' },
-          columnSliceText: 'none',
-          legend: { position: "none" },
-          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
         }
       };
-
-      var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
-
       chart.draw(data, google.charts.Bar.convertOptions(options));
     }
 
@@ -103,8 +119,8 @@
 
     .col-chart {
       position: absolute;
-      top: 3%;
-      left: 20%;
+      top: 16%;
+      left: 28%;
     }
   </style>
 </head>
@@ -129,22 +145,6 @@
         </thead>
       </table>
     </div>
-    <script>
-      function httpGet(theUrl) {
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open("GET", theUrl, false);
-        xmlHttp.send(null);
-        return xmlHttp.responseText;
-      }
-      setInterval(function () {
-        const elem = document.getElementById("log");
-        let res = JSON.parse(httpGet('/log'))['result'];
-        if (res) {
-          elem.innerHTML += `<p><span style="color: #66CC00">$></span> ${res}</p>`;
-          elem.scrollTop = elem.scrollHeight;
-        }
-      }, 1000);
-    </script>
     <div class="custom-control custom-checkbox px-5">
       <input type="checkbox" id="customCheckbox1" name="customCheckbox" class="custom-control-input">
       <label class="custom-control-label" for="customCheckbox1">IP ADDRESS</label>
