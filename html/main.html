@@ -12,64 +12,115 @@
     crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
     crossorigin="anonymous"></script>
-  <script>
-    window.onload = function () {
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    function httpGetChart(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", theUrl, false);
+      xmlHttp.send(null);
+      return xmlHttp.responseText;
+    }
+    google.charts.load('current', { 'packages': ['bar'] });
+    google.charts.setOnLoadCallback(function() {
+      setInterval(function () {
+        drawChart();
+      }, 1000);
+    });
+    function doTab() {
+      var i;
+      var j;
+      let array = [];
+      array.push(["Slave", "Worker", "Load", "Data"]);
+      array.push(["1", 1000, 400, 200]);
+      // let res = JSON.parse(httpGetChart('/state'))['result'];
+      // if (res) {
+        // for (let slave in data) {
+        //   for (let worker in data[slave])
+        // }
+//      }
+      return array;
+    }
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable(doTab());
+      //   ['Year', 'Sales', 'Expenses', 'Profit'],
+      //   ['2014', 1000, 400, 200],
+      //   ['2015', 1170, 460, 250],
+      //   ['2016', 660, 1120, 300],
+      //   ['2017', 1030, 540, 350]
+      // ]);
 
       var options = {
-        animationEnabled: true,
-        title: {
-          text: "Dashboard"
-        },
-        axisY: {
-          title: "Number Worker",
-          valueFormatString: "#0,,.",
-        },
-        data: [{
-          type: "area",
-          markerSize: 5,
-          xValueFormatString: "YYYY",
-          yValueFormatString: "$#,##0.##",
-          dataPoints: [
-            { x: new Date(2000, 0), y: 2289000 },
-            { x: new Date(2001, 0), y: 2830000 },
-            { x: new Date(2002, 0), y: 1009000 },
-            { x: new Date(2003, 0), y: 1840000 },
-            { x: new Date(2004, 0), y: 1396000 },
-            { x: new Date(2005, 0), y: 2613000 },
-            { x: new Date(2006, 0), y: 1821000 },
-            { x: new Date(2007, 0), y: 1000000 },
-            { x: new Date(2008, 0), y: 1397000 },
-            { x: new Date(2009, 0), y: 1506000 },
-            { x: new Date(2010, 0), y: 1798000 },
-            { x: new Date(2011, 0), y: 2386000 },
-            { x: new Date(2012, 0), y: 4704000 },
-            { x: new Date(2013, 0), y: 4926000 },
-            { x: new Date(2014, 0), y: 1394000 },
-            { x: new Date(2015, 0), y: 972000 },
-            { x: new Date(2016, 0), y: 1140000 }
-          ]
-        }]
+        chart: {
+          title: '',
+          width: 800,
+          height: 600,
+          backgroundColor: { fill: 'transparent' },
+          columnSliceText: 'none',
+          legend: { position: "none" },
+          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        }
       };
-      $("#chartContainer").CanvasJSChart(options);
 
+      var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+      chart.draw(data, google.charts.Bar.convertOptions(options));
     }
+
+
   </script>
+
+  <style>
+    .chart {
+      position: absolute;
+      top: 15%;
+      left: 30%;
+    }
+
+    .log {
+      position: absolute;
+      top: 23%;
+      right: 6%;
+      width: 30%;
+      height: 30%;
+      padding: 30px;
+      color: #fff;
+      opacity: 0.85;
+      line-height: 3px;
+    }
+
+    .title-log {
+      position: absolute;
+      top: 18%;
+      text-align: center;
+      right: 6%;
+      width: 30%;
+      height: 5%;
+      padding: 12.5px;
+      color: #fff;
+    }
+
+    .col-chart {
+      position: absolute;
+      top: 3%;
+      left: 20%;
+    }
+  </style>
 </head>
 
 <body>
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">Plazza home page</a>
+    <a class="navbar-brand" href="#">Plazza hom page</a>
   </nav>
-  <div class="pre area chart mt-5">
-  <main class="col-12 col-sm col-md-9 col-xl-10 py-md-20 pl-md-20 bd-content" role="chart">
-  <div class="area chart float-right" id="chartContainer" style="height: 25%; width: 70%; "></div>
-  <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
-  <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-  </main>
+  <!-- <div class="donut-lb" id="donutchart"></div> -->
+  <div id="columnchart_material" class="col-chart"></div>
+  <!-- <div id="columnchart_values" class="col-chart"></div> -->
+  <div class="title-log font-weight-bold bg-dark">Console</div>
+  <div id="log" class="log bg-dark" style="overflow: auto">
   </div>
   <div class="container-fluid " style="width: 90%;">
-    <!-- <h3 class="py-4">Criteria</h3> -->
-    <div class="Title Criteria py-4" style="width:15.8%">
+    <div class="Title Criteria py-4 mt-5" style="width:15.8%">
       <table class="table table-borderless table-striped">
         <thead class="thead-dark">
           <tr>
@@ -78,6 +129,22 @@
         </thead>
       </table>
     </div>
+    <script>
+      function httpGet(theUrl) {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", theUrl, false);
+        xmlHttp.send(null);
+        return xmlHttp.responseText;
+      }
+      setInterval(function () {
+        const elem = document.getElementById("log");
+        let res = JSON.parse(httpGet('/log'))['result'];
+        if (res) {
+          elem.innerHTML += `<p><span style="color: #66CC00">$></span> ${res}</p>`;
+          elem.scrollTop = elem.scrollHeight;
+        }
+      }, 1000);
+    </script>
     <div class="custom-control custom-checkbox px-5">
       <input type="checkbox" id="customCheckbox1" name="customCheckbox" class="custom-control-input">
       <label class="custom-control-label" for="customCheckbox1">IP ADDRESS</label>
@@ -90,7 +157,6 @@
       <input type="checkbox" id="customCheckbox3" name="customCheckbox" class="custom-control-input">
       <label class="custom-control-label" for="customCheckbox3">PHONE NUMBER</label>
     </div>
-    <!-- <h3 class="py-4">File</h3> -->
     <div class="Title File py-4 mt-4" style="width:15.8%;">
       <table class="table table-borderless table-striped">
         <thead class="thead-dark">
@@ -104,13 +170,13 @@
       <input type="text" class="form-control" placeholder="Enter pathname" aria-describedby="pathname">
     </div>
     <main class="col-xl-2 py-md-3 pl-md-1 bd-content" role="main">
-        <div class="prev-input py-3">
+      <div class="prev-input py-3">
         <div class="float-right submit">
           <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </div>
     </main>
-    <h1 class="py-4">Thread Status</h1>
+    <h1 class="py-4 mt-5">Thread Status</h1>
     <table class="table table-borderless table-striped">
       <thead class="thead-dark">
         <tr>
