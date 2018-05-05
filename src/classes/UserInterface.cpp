@@ -75,7 +75,7 @@ void Plazza::UserInterface::_endpointHome(
 		_lastRes = "";
 		std::string temp;
 		while (std::getline(fs, temp))
-			_lastRes += temp;
+			_lastRes += temp + '\n';
 	}
 	fs.close();
 }
