@@ -8,6 +8,7 @@
 #include "Slave.hpp"
 #include <functional>
 #include <map>
+#include <regex>
 #include <signal.h>
 #include <sstream>
 
@@ -28,8 +29,7 @@ void Plazza::Slave::launchChild()
 	std::map<std::string,
 		void (Plazza::Slave::*)(std::istringstream & input)>
 		map{{"LOAD", &Plazza::Slave::handleLoad},
-			{"TOTAL", &Plazza::Slave::handleTotalPower},
-			{"AVAILABLE", &Plazza::Slave::handleAvailablePower},
+			{"SUMMARY", &Plazza::Slave::handleSummaryLoad},
 			{"EXIT", &Plazza::Slave::handleExit},
 			{"TASK", &Plazza::Slave::handleTask}};
 
@@ -62,7 +62,6 @@ unsigned Plazza::Slave::getLoad()
 		_fork.getSocket().send("LOAD\n");
 		auto ret = std::strtoul(
 			_fork.getSocket().receive().c_str(), 0, 10);
-		// std::cout << "|=> " << ret << std::endl;
 		return ret;
 	}
 	return 0;
@@ -79,34 +78,34 @@ void Plazza::Slave::pushTask(const Plazza::Task task)
 	}
 }
 
-unsigned Plazza::Slave::getTotalPower()
+std::vector<size_t> Plazza::Slave::getSummaryLoad()
 {
-	if (_fork.isChild())
-		_fork.getSocket().send(
-			std::to_string(_pool.getTotalPower()) + "\n");
-	else {
-		_fork.getSocket().send("TOTAL\n");
-		auto ret = std::strtoul(
-			_fork.getSocket().receive().c_str(), 0, 10);
-		// std::cout << "|=> " << ret << std::endl;
-		return ret;
-	}
-	return 0;
-}
+	std::vector<size_t> res;
 
-unsigned Plazza::Slave::getAvailablePower()
-{
-	if (_fork.isChild())
-		_fork.getSocket().send(
-			std::to_string(_pool.getAvailablePower()) + "\n");
-	else {
-		_fork.getSocket().send("AVAILABLE\n");
-		auto ret = std::strtoul(
-			_fork.getSocket().receive().c_str(), 0, 10);
-		// std::cout << "|=> " << ret << std::endl;
-		return ret;
+	if (_fork.isChild()) {
+		std::string s = "";
+		for (auto &l : _pool.getSummaryLoad()) {
+			s += std::to_string(l);
+			s += ',';
+		}
+		s.back() = '\n';
+		_fork.getSocket().send(s);
 	}
-	return 0;
+	else {
+		_fork.getSocket().send("SUMMARY\n");
+		std::string rec = _fork.getSocket().receive();
+		std::cmatch cm;
+		size_t offset = 0;
+		while (offset < rec.size() &&
+			std::regex_search(rec.c_str() + offset, cm,
+				std::regex("[0-9]+"))) {
+			res.push_back(
+				std::strtoul(cm[0].str().c_str(), 0, 10));
+			offset += cm[0].length() + 1;
+		}
+		dprintf(2, "load: %s\n", rec.c_str());
+	}
+	return res;
 }
 
 void Plazza::Slave::exit()
@@ -134,16 +133,10 @@ void Plazza::Slave::handleLoad(std::istringstream &input)
 	Plazza::Slave::getLoad();
 }
 
-void Plazza::Slave::handleTotalPower(std::istringstream &input)
+void Plazza::Slave::handleSummaryLoad(std::istringstream &input)
 {
 	static_cast<void>(input);
-	Plazza::Slave::getTotalPower();
-}
-
-void Plazza::Slave::handleAvailablePower(std::istringstream &input)
-{
-	static_cast<void>(input);
-	Plazza::Slave::getAvailablePower();
+	Plazza::Slave::getSummaryLoad();
 }
 
 void Plazza::Slave::handleExit(std::istringstream &input)

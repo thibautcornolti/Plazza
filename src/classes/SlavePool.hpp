@@ -22,8 +22,8 @@ namespace Plazza {
 		void pushTask(Task);
 		void createSlave();
 		Slave &getBestSlave();
-		unsigned getTotalPower();
-		unsigned getAvailablePower();
+		unsigned getLoad();
+		std::vector<std::vector<size_t>> getSummaryLoad();
 		void exit();
 
 	protected:

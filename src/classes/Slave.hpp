@@ -24,16 +24,14 @@ namespace Plazza {
 		void launchChild();
 		void pushTask(const Task);
 		unsigned getLoad();
-		unsigned getTotalPower();
-		unsigned getAvailablePower();
+		std::vector<size_t> getSummaryLoad();
 		void exit();
 
 	protected:
 	private:
 		void handleTask(std::istringstream &input);
 		void handleLoad(std::istringstream &input);
-		void handleTotalPower(std::istringstream &input);
-		void handleAvailablePower(std::istringstream &input);
+		void handleSummaryLoad(std::istringstream &input);
 		void handleExit(std::istringstream &input);
 
 		size_t _id;

@@ -57,7 +57,7 @@ std::string Plazza::UserInterface::_router(
 	_endpointHome(method, path);
 	_endpointLog(method, path);
 	_endpointScrap(method, path);
-	_endpointSlaves(method, path);
+	_endpointState(method, path);
 	return _lastRes;
 }
 
@@ -95,12 +95,27 @@ void Plazza::UserInterface::_endpointLog(
 	}
 }
 
-void Plazza::UserInterface::_endpointSlaves(
+void Plazza::UserInterface::_endpointState(
 	const std::string &, const std::string &path)
 {
 	std::cmatch cm;
 
-	if (std::regex_search(path.c_str(), cm, std::regex("^/slaves/?$"))) {
+	if (std::regex_search(path.c_str(), cm, std::regex("^/state/?$"))) {
+		dprintf(2, "state\n");
+		_lastRes = "{";
+		std::vector<std::vector<size_t>> r = _pool->getSummaryLoad();
+		for (size_t sl = 0; sl < r.size(); ++sl) {
+			_lastRes += "\"" + std::to_string(sl) + "\": {";
+			for (size_t wo = 0; wo < r[sl].size(); ++wo)
+				_lastRes += "\"" + std::to_string(wo) +
+					"\": " + std::to_string(r[sl][wo]) +
+					",";
+			_lastRes.back() = '}';
+			if (sl + 1 != r.size())
+				_lastRes += ",";
+		}
+		_lastRes += "}";
+		//_lastRes = std::to_string(_pool->getAvailablePower());
 	}
 }
 

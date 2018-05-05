@@ -8,6 +8,7 @@
 #include "Socket.hpp"
 #include <errno.h>
 #include <poll.h>
+#include <signal.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -21,6 +22,7 @@ Socket::Socket(int domain, int type, int protocol)
 
 Socket::Socket(int fd) : _socket(fd)
 {
+	signal(SIGPIPE, &_sigPipeHandler);
 }
 
 Socket::~Socket()
@@ -55,7 +57,7 @@ bool Socket::waitData(int timeout)
 
 bool Socket::isDataPending()
 {
-	return _buffer.size() !=Socket::waitData(0);
+	return _buffer.size() != Socket::waitData(0);
 }
 
 std::string Socket::receive()
@@ -80,8 +82,6 @@ std::string Socket::receive()
 	return c;
 }
 
-
-
 void Socket::send(std::string msg)
 {
 	::write(_socket, msg.c_str(), msg.size());
@@ -90,4 +90,8 @@ void Socket::send(std::string msg)
 int Socket::getHandle()
 {
 	return _socket;
+}
+
+void Socket::_sigPipeHandler(int)
+{
 }

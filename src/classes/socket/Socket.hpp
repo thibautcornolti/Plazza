@@ -26,4 +26,5 @@ protected:
 	std::string _buffer;
 
 private:
+	static void _sigPipeHandler(int);
 };

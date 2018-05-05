@@ -29,8 +29,6 @@ Plazza::Slave &Plazza::SlavePool::getBestSlave()
 			minSlave = i;
 			minLoad = _slaves[i]->getLoad();
 		}
-	dprintf(2, "[SLAVE POOL] Using slave %d (with load %d)\n", minSlave,
-		minLoad);
 	return *_slaves[minSlave];
 }
 
@@ -43,28 +41,28 @@ void Plazza::SlavePool::createSlave()
 
 void Plazza::SlavePool::pushTask(Plazza::Task task)
 {
-	dprintf(2, "[SLAVE POOL] Available power %d\n", getAvailablePower());
-	if (getAvailablePower() == 0)
+	if (getLoad() >= 2 * _workerCount * _slaves.size())
 		createSlave();
 	getBestSlave().pushTask(task);
 }
 
-unsigned Plazza::SlavePool::getTotalPower()
+unsigned Plazza::SlavePool::getLoad()
 {
-	unsigned totalPower = 0;
+	unsigned load = 0;
 
 	for (auto &s : _slaves)
-		totalPower += s->getTotalPower();
-	return totalPower;
+		load += s->getLoad();
+	return load;
 }
 
-unsigned Plazza::SlavePool::getAvailablePower()
+std::vector<std::vector<size_t>> Plazza::SlavePool::getSummaryLoad()
 {
-	unsigned availablePower = 0;
+	std::vector<std::vector<size_t>> res;
 
+	res.reserve(_slaves.size());
 	for (auto &s : _slaves)
-		availablePower += s->getAvailablePower();
-	return availablePower;
+		res.emplace_back(s->getSummaryLoad());
+	return res;
 }
 
 void Plazza::SlavePool::exit()
@@ -72,7 +70,6 @@ void Plazza::SlavePool::exit()
 	int i = 0;
 	std::for_each(_slaves.begin(), _slaves.end(),
 		[&i](std::unique_ptr<Plazza::Slave> &slave) {
-			dprintf(2, "[SlavePool] EXIT pushed to Slave %d\n", i);
 			slave->exit();
 			i += 1;
 		});

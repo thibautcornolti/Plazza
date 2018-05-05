@@ -20,8 +20,7 @@ namespace Plazza {
 		~WorkerPool();
 		void pushTask(const Plazza::Task) override;
 		unsigned getLoad();
-		unsigned getTotalPower();
-		unsigned getAvailablePower();
+		std::vector<size_t> getSummaryLoad();
 		void exit();
 
 	protected:

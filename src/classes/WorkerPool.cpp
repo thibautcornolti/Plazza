@@ -50,22 +50,17 @@ Plazza::Worker &Plazza::WorkerPool::getBestWorker()
 
 void Plazza::WorkerPool::pushTask(const Plazza::Task task)
 {
-	dprintf(2, "[WorkerPool] Available power %d\n", getAvailablePower());
 	getBestWorker().pushTask(task);
 }
 
-unsigned Plazza::WorkerPool::getTotalPower()
+std::vector<size_t> Plazza::WorkerPool::getSummaryLoad()
 {
-	return _workers.size();
-}
+	std::vector<size_t> res;
 
-unsigned Plazza::WorkerPool::getAvailablePower()
-{
-	unsigned availablePower = 0;
-
+	res.reserve(_workers.size());
 	for (auto &w : _workers)
-		availablePower += !w->isWorking();
-	return availablePower;
+		res.emplace_back(w->getLoad());
+	return res;
 }
 
 void Plazza::WorkerPool::exit()
