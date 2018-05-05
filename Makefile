@@ -22,6 +22,7 @@ LIST	=	classes/Task				\
 		classes/Fork				\
 		classes/UserInterface			\
 		classes/WebServer			\
+		classes/NamedPipe			\
 		classes/socket/Socket			\
 		classes/socket/TCPSocket		\
 		classes/socket/ServerTCPSocket		\
