@@ -11,7 +11,6 @@ Plazza::WorkerPool::WorkerPool(
 	size_t id, size_t threadCount, const std::string &loggerName)
 	: _id(id), _threadCount(threadCount), _loggerName(loggerName)
 {
-	dprintf(2, "WORKERPOOL %d\n", getpid());
 	_workers.reserve(_threadCount);
 	for (size_t i = 0; i < _threadCount; i++)
 		_workers.push_back(
@@ -41,8 +40,6 @@ Plazza::Worker &Plazza::WorkerPool::getBestWorker()
 			minWorker = i;
 			minLoad = _workers[i]->getLoad();
 		}
-	dprintf(2, "[WorkerPool] Using worker %d (with load %d)\n", minWorker,
-		minLoad);
 	return *_workers[minWorker].get();
 }
 
@@ -79,7 +76,5 @@ void Plazza::WorkerPool::exit()
 			worker->pushTask(Plazza::Task());
 			i += 1;
 		});
-	dprintf(2, "[WORKERPOOL %lu] CLEAR\n", _id);
 	_workers.clear();
-	dprintf(2, "[WORKERPOOL %lu] OK\n", _id);
 }

@@ -39,12 +39,9 @@ void Plazza::Slave::launchChild()
 			auto order = std::istringstream(line);
 			std::string opcode;
 			order >> opcode;
-			// std::cout << "GOT OPCODE: '" << opcode << "'"
-			// 	  << std::endl;
 			(this->*map.at(opcode))(order);
 		}
 		catch (...) {
-			dprintf(2, "__EXXIT__\n");
 			std::exit(0);
 		}
 	}
@@ -78,27 +75,37 @@ std::vector<size_t> Plazza::Slave::getSummaryLoad()
 {
 	std::vector<size_t> res;
 
-	if (_fork.isChild()) {
-		std::string s = "";
-		for (auto &l : _pool.getSummaryLoad()) {
-			s += std::to_string(l);
-			s += ',';
-		}
-		s.back() = '\n';
-		_fork.getSocket().send(s);
+	if (_fork.isChild())
+		_getSummaryLoadChild();
+	else
+		res = _getSummaryLoadFather();
+	return res;
+}
+
+void Plazza::Slave::_getSummaryLoadChild()
+{
+	std::string s = "";
+	for (auto &l : _pool.getSummaryLoad()) {
+		s += std::to_string(l);
+		s += ',';
 	}
-	else {
-		_fork.getSocket().send("SUMMARY_L\n");
-		std::string rec = _fork.getSocket().receive();
-		std::cmatch cm;
-		size_t offset = 0;
-		while (offset < rec.size() &&
-			std::regex_search(rec.c_str() + offset, cm,
-				std::regex("[0-9]+"))) {
-			res.push_back(
-				std::strtoul(cm[0].str().c_str(), 0, 10));
-			offset += cm[0].length() + 1;
-		}
+	s.back() = '\n';
+	_fork.getSocket().send(s);
+}
+
+std::vector<size_t> Plazza::Slave::_getSummaryLoadFather()
+{
+	std::vector<size_t> res;
+
+	_fork.getSocket().send("SUMMARY_L\n");
+	std::string rec = _fork.getSocket().receive();
+	std::cmatch cm;
+	size_t offset = 0;
+	while (offset < rec.size() &&
+		std::regex_search(
+			rec.c_str() + offset, cm, std::regex("[0-9]+"))) {
+		res.push_back(std::strtoul(cm[0].str().c_str(), 0, 10));
+		offset += cm[0].length() + 1;
 	}
 	return res;
 }
@@ -107,31 +114,42 @@ std::vector<Plazza::Task> Plazza::Slave::getSummaryTask()
 {
 	std::vector<Plazza::Task> res;
 
-	if (_fork.isChild()) {
-		std::string s = "";
-		for (auto &l : _pool.getSummaryTask()) {
-			std::stringstream ss("");
-			ss << l;
-			s += ss.str();
-			s += ',';
-		}
-		s.back() = '\n';
-		_fork.getSocket().send(s);
+	if (_fork.isChild())
+		_getSummaryTaskChild();
+	else
+		res = _getSummaryTaskFather();
+	return res;
+}
+
+void Plazza::Slave::_getSummaryTaskChild()
+{
+	std::string s = "";
+	for (auto &l : _pool.getSummaryTask()) {
+		std::stringstream ss("");
+		ss << l;
+		s += ss.str();
+		s += ',';
 	}
-	else {
-		_fork.getSocket().send("SUMMARY_T\n");
-		std::string rec = _fork.getSocket().receive();
-		std::cmatch cm;
-		size_t offset = 0;
-		while (offset < rec.size() &&
-			std::regex_search(rec.c_str() + offset, cm,
-				std::regex("<Task.*?>"))) {
-			Plazza::Task t;
-			std::stringstream ss(cm[0]);
-			ss >> t;
-			res.push_back(t);
-			offset += cm[0].length() + 1;
-		}
+	s.back() = '\n';
+	_fork.getSocket().send(s);
+}
+
+std::vector<Plazza::Task> Plazza::Slave::_getSummaryTaskFather()
+{
+	std::vector<Plazza::Task> res;
+
+	_fork.getSocket().send("SUMMARY_T\n");
+	std::string rec = _fork.getSocket().receive();
+	std::cmatch cm;
+	size_t offset = 0;
+	while (offset < rec.size() &&
+		std::regex_search(
+			rec.c_str() + offset, cm, std::regex("<Task.*?>"))) {
+		Plazza::Task t;
+		std::stringstream ss(cm[0]);
+		ss >> t;
+		res.push_back(t);
+		offset += cm[0].length() + 1;
 	}
 	return res;
 }

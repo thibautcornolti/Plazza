@@ -35,6 +35,7 @@ namespace Plazza {
 	protected:
 	private:
 		void _run();
+		bool _waitForTask();
 		void _parse(Plazza::Task &);
 
 		size_t _slaveID;
