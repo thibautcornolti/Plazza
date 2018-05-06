@@ -24,54 +24,49 @@ static void atFork(Plazza::WorkerOutputHandler *output)
 	output->stop();
 }
 
-void run(int nb)
+void run(int nb, bool tty)
 {
-	// TEST PARSER AND WORKERS
 	Plazza::Parser p;
 	Plazza::WorkerOutputHandler output;
 	Plazza::UserInterface ui;
 	Plazza::SlavePool pool(
 		nb, output.getPath(), std::bind(&atFork, &output));
-	ui.launch(pool, output);
-
+	if (tty)
+		ui.launch(pool, output);
 	while (1) {
 		auto task = p.getNextTask();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
 		pool.pushTask(task);
 	}
-	ui.stop();
-
+	if (tty) {
+		dprintf(2, "Exiting...\n");
+		ui.stop();
+		dprintf(2, "Waiting for all thread to exit...\n");
+	}
 	pool.exit();
 	output.stop();
-
-	// TEST SOCKETS
-	// ClientTCPSocket socket("hirevo.eu", 4444);
-	// std::cout << socket.receive() << std::endl;
-	// socket.send("user anonymous\r\n");
-	// std::cout << socket.receive() << std::endl;
-	// socket.close();
-
-	// TEST SERIALISATION
-	// COMMAND: echo "<Task Scrap toto.txt IP_ADDRESS>" | ./plazza
-	// Plazza::Task out;
-
-	// std::cout << out << std::endl;
-	// std::cin >> out;
-	// std::cout << out << std::endl;
-
-	// Plazza::WorkerOutputHandler w;
-	// dprintf(2, "%s\n", w.getPath().c_str());
-	// ClientUnixSocket u(w.getPath());
-	// u.send("oui!\n");
-	// std::this_thread::sleep_for(std::chrono::seconds(1));
 }
 
 int main(int ac, char **av)
 {
+	if (ac != 2) {
+		std::cout << "Usage: " << av[0] << " <number of thread>"
+			  << std::endl;
+		return EXIT_SUCCESS;
+	}
+	int nb = std::strtod(av[1], 0);
+	if (nb <= 0) {
+		std::cout << "Usage: " << av[0] << " <number of thread>"
+			  << std::endl;
+		return EXIT_SUCCESS;
+	}
 	try {
-		run(2);
+		run(nb, isatty(0));
 	}
 	catch (...) {
+		std::cerr << "Fatal error" << std::endl;
+		return EXIT_FAILURE;
 	}
+	return EXIT_SUCCESS;
 }
