@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <sys/socket.h>
+
 #include "Socket.hpp"
 
 class UnixSocket : public Socket {

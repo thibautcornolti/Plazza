@@ -7,14 +7,17 @@
 
 #pragma once
 
-#include <unistd.h>
 #include <poll.h>
 #include <sys/stat.h>
-#include <vector>
-#include <list>
-#include <thread>
+#include <unistd.h>
+
 #include <condition_variable>
+#include <fstream>
+#include <list>
 #include <string>
+#include <thread>
+#include <vector>
+
 #include "socket/ServerUnixSocket.hpp"
 
 namespace Plazza {
@@ -44,5 +47,6 @@ namespace Plazza {
 		ServerUnixSocket _server;
 		std::vector<UnixSocket> _clients;
 		std::list<std::string> _logs;
+		std::fstream _logfile;
 	};
 };

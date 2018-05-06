@@ -6,13 +6,6 @@
 */
 
 #include "NamedPipe.hpp"
-#include <poll.h>
-#include <sstream>
-#include <stdexcept>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
 
 NamedPipe::NamedPipe(const std::string &name, Permissions fdPermission,
 	mode_t fifoPermission)

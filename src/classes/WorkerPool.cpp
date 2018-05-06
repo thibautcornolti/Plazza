@@ -6,8 +6,6 @@
 */
 
 #include "WorkerPool.hpp"
-#include <algorithm>
-#include <unistd.h>
 
 Plazza::WorkerPool::WorkerPool(
 	size_t id, size_t threadCount, const std::string &loggerName)

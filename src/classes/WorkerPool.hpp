@@ -7,10 +7,14 @@
 
 #pragma once
 
-#include "TaskPusherizer.hpp"
-#include "Worker.hpp"
+#include <unistd.h>
+
+#include <algorithm>
 #include <cstddef>
 #include <vector>
+
+#include "TaskPusherizer.hpp"
+#include "Worker.hpp"
 
 namespace Plazza {
 	class WorkerPool : public TaskPusherizer {

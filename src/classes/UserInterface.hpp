@@ -7,17 +7,19 @@
 
 #pragma once
 
+#include <string.h>
+
+#include <fstream>
+#include <memory>
+#include <regex>
+#include <string>
+#include <thread>
+#include <vector>
+
 #include "SlavePool.hpp"
 #include "WebServer.hpp"
 #include "WorkerOutputHandler.hpp"
 #include "socket/ServerTCPSocket.hpp"
-#include <fstream>
-#include <regex>
-#include <string.h>
-#include <string>
-#include <memory>
-#include <thread>
-#include <vector>
 
 namespace Plazza {
 	class UserInterface {

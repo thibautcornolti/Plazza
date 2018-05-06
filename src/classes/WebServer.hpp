@@ -7,12 +7,15 @@
 
 #pragma once
 
-#include "socket/ServerTCPSocket.hpp"
-#include <functional>
 #include <poll.h>
-#include <regex>
 #include <string.h>
+#include <unistd.h>
+
+#include <functional>
+#include <regex>
 #include <vector>
+
+#include "socket/ServerTCPSocket.hpp"
 
 class WebServer {
 public:

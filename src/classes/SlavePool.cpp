@@ -6,7 +6,6 @@
 */
 
 #include "SlavePool.hpp"
-#include <algorithm>
 
 Plazza::SlavePool::SlavePool(unsigned workerCount,
 	const std::string &loggerName, const std::function<void(void)> &atFork)

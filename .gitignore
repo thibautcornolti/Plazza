@@ -2,3 +2,5 @@
 *.o
 plazza
 .idea
+plazza.log
+

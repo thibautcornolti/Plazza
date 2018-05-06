@@ -47,16 +47,14 @@ void Plazza::WorkerOutputHandler::popLogLine()
 void Plazza::WorkerOutputHandler::stop()
 {
 	_hasToStop = true;
-	dprintf(2, "[OUTPUT %d] stopping\n", getpid());
-	if (_thread.joinable() && _isRunning) {
-		dprintf(2, "[OUTPUT %d] joining\n", getpid());
+	if (_thread.joinable() && _isRunning)
 		_thread.join();
-		dprintf(2, "[OUTPUT %d] joined\n", getpid());
-	}
 }
 
 void Plazza::WorkerOutputHandler::_run()
 {
+	std::fstream logfile("plazza.log",
+		std::fstream::in | std::fstream::app | std::fstream::ate);
 	_isRunning = true;
 	mkdir(".sockets", S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH);
 	_server = ServerUnixSocket(_path);
@@ -67,8 +65,8 @@ void Plazza::WorkerOutputHandler::_run()
 		_readClients();
 	}
 	_server.close();
+	logfile.close();
 	remove(_path.c_str());
-	dprintf(2, "[OUTPUT %d] stopped!\n", getpid());
 	_isRunning = false;
 }
 
@@ -89,14 +87,15 @@ void Plazza::WorkerOutputHandler::_readClients()
 			while (client.isDataPending()) {
 				received = client.receive();
 				dprintf(1, "%s\n", received.c_str());
+				if (_logfile.is_open())
+					_logfile << received << std::endl;
 				_logs.push_back(received);
 			}
+			cl.emplace_back(client);
 		}
 		catch (std::exception) {
 			client.close();
-			continue;
 		}
-		cl.emplace_back(client);
 	}
 	_clients = cl;
 }

@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include <netdb.h>
+#include <sys/socket.h>
+
 #include "Socket.hpp"
 
 class TCPSocket : public Socket {

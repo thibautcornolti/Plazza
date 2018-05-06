@@ -6,7 +6,6 @@
 */
 
 #include "WebServer.hpp"
-#include <unistd.h>
 
 WebServer::WebServer(const std::string &ip, int port, const Router &router)
 	: _ip(ip), _port(port), _socket(ip, port), _sockets(0), _router(router)

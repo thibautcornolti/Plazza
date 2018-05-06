@@ -40,13 +40,12 @@ void Plazza::UserInterface::stop()
 
 void Plazza::UserInterface::_run()
 {
-	dprintf(2, "[UI %d] Thread started\n", getpid());
 	_srv = WebServer("127.0.0.1", 8181,
 		std::bind(&Plazza::UserInterface::_router, this,
 			std::placeholders::_1, std::placeholders::_2));
-	dprintf(2, "[UI %d] Starting at http://127.0.0.1:8181/\n", getpid());
+	dprintf(2, "[UI] Starting at http://127.0.0.1:8181/\n");
 	_srv.launch(_hasToStop);
-	dprintf(2, "[UI %d] Stopped\n", getpid());
+	dprintf(2, "[UI] Stopped\n");
 }
 
 std::string Plazza::UserInterface::_router(
@@ -87,16 +86,12 @@ void Plazza::UserInterface::_endpointLog(
 	std::fstream fs;
 
 	if (std::regex_search(path.c_str(), cm, std::regex("^/log/?$"))) {
-		dprintf(2, "[Log Endpoint] start\n");
 		if (!_output->hasLogPending()) {
 			_lastRes = "{\"error\": \"no log is pending\"}";
-			dprintf(2, "[Log Endpoint]nothing\n");
 			return;
 		}
 		_lastRes = "{\"result\": \"" + _output->getLogLine() + "\"}";
-		dprintf(2, "[Log Endpoint]popping\n");
 		_output->popLogLine();
-		dprintf(2, "[Log Endpoint]popped\n");
 	}
 }
 

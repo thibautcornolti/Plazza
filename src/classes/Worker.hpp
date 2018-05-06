@@ -7,10 +7,14 @@
 
 #pragma once
 
+#include <unistd.h>
+
 #include <condition_variable>
 #include <iostream>
 #include <queue>
 #include <thread>
+
+#include "Scrapper.hpp"
 #include "Task.hpp"
 #include "TaskPusherizer.hpp"
 #include "socket/ClientUnixSocket.hpp"

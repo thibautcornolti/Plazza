@@ -6,12 +6,6 @@
 */
 
 #include "Socket.hpp"
-#include <errno.h>
-#include <poll.h>
-#include <signal.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 Socket::Socket(int domain, int type, int protocol)
 	: _socket(::socket(domain, type, protocol))

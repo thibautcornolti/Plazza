@@ -5,8 +5,6 @@
 ** Parser
 */
 
-#include <string>
-
 #include "Parser.hpp"
 
 const std::regex Plazza::Parser::validator("^[^\\s]+(?:\\s+[^\\s]+?)*\\s+(?:"

@@ -7,12 +7,18 @@
 
 #pragma once
 
+#include <signal.h>
+
+#include <functional>
+#include <map>
+#include <regex>
+#include <sstream>
+
 #include "Fork.hpp"
 #include "Task.hpp"
 #include "TaskPusherizer.hpp"
 #include "Worker.hpp"
 #include "WorkerPool.hpp"
-#include <functional>
 
 namespace Plazza {
 	class Slave : public TaskPusherizer {

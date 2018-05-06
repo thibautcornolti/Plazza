@@ -7,8 +7,16 @@
 
 #pragma once
 
-#include <string>
 #include <fcntl.h>
+#include <poll.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 class NamedPipe {
 public:

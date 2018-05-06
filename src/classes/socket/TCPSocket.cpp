@@ -6,8 +6,6 @@
 */
 
 #include "TCPSocket.hpp"
-#include <sys/socket.h>
-#include <netdb.h>
 
 TCPSocket::TCPSocket() : Socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)
 {

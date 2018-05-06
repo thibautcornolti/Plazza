@@ -6,10 +6,6 @@
 */
 
 #include "ClientUnixSocket.hpp"
-#include <stdexcept>
-#include <string.h>
-#include <sys/socket.h>
-#include <sys/un.h>
 
 ClientUnixSocket::ClientUnixSocket() : UnixSocket()
 {

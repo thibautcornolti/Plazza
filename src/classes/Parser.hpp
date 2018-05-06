@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "Task.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <regex>
 #include <string>
 #include <vector>
+
+#include "Task.hpp"
 
 namespace Plazza {
 	class Parser {

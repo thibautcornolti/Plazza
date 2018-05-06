@@ -7,10 +7,12 @@
 
 #pragma once
 
-#include "Slave.hpp"
-#include "TaskPusherizer.hpp"
+#include <algorithm>
 #include <functional>
 #include <memory>
+
+#include "Slave.hpp"
+#include "TaskPusherizer.hpp"
 
 namespace Plazza {
 	class SlavePool : public TaskPusherizer {

@@ -6,9 +6,6 @@
 */
 
 #include "Fork.hpp"
-#include "socket/SocketPair.hpp"
-#include <sys/socket.h>
-#include <sys/wait.h>
 
 Fork::Fork() : _otherPid(getpid())
 {

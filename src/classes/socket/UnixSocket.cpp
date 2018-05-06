@@ -6,7 +6,6 @@
 */
 
 #include "UnixSocket.hpp"
-#include <sys/socket.h>
 
 UnixSocket::UnixSocket() : Socket(AF_UNIX, SOCK_STREAM, 0)
 {

@@ -7,8 +7,14 @@
 
 #pragma once
 
-#include "UnixSocket.hpp"
+#include <stdexcept>
+#include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
+
 #include <string>
+
+#include "UnixSocket.hpp"
 
 class ClientUnixSocket : public UnixSocket {
 public:

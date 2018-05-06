@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <iostream>
+#include <map>
 #include <string>
 
 namespace Plazza {

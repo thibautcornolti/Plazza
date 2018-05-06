@@ -7,6 +7,13 @@
 
 #pragma once
 
+#include <errno.h>
+#include <poll.h>
+#include <signal.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <unistd.h>
+
 #include "ISocket.hpp"
 
 class Socket : public ISocket {

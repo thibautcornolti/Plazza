@@ -5,9 +5,6 @@
 ** plazza
 */
 
-#include <iostream>
-#include <map>
-
 #include "Task.hpp"
 
 Plazza::Task::Task(

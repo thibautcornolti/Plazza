@@ -21,7 +21,6 @@
 
 static void atFork(Plazza::WorkerOutputHandler *output)
 {
-	dprintf(2, "atFork called\n");
 	output->stop();
 }
 
@@ -66,7 +65,6 @@ void run(int nb)
 	// ClientUnixSocket u(w.getPath());
 	// u.send("oui!\n");
 	// std::this_thread::sleep_for(std::chrono::seconds(1));
-	dprintf(2, "end of ALL\n");
 }
 
 int main(int ac, char **av)

@@ -6,12 +6,6 @@
 */
 
 #include "ServerTCPSocket.hpp"
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <stdexcept>
-#include <string.h>
 
 ServerTCPSocket::ServerTCPSocket() : TCPSocket()
 {

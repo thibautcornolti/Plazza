@@ -6,9 +6,6 @@
 */
 
 #include "Worker.hpp"
-#include <unistd.h>
-
-#include "Scrapper.hpp"
 
 Plazza::Worker::Worker(
 	size_t slaveID, size_t workerID, const std::string &loggerName)

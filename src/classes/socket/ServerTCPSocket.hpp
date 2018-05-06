@@ -7,8 +7,16 @@
 
 #pragma once
 
-#include "TCPSocket.hpp"
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <sys/socket.h>
+
+#include <stdexcept>
 #include <string>
+
+#include "TCPSocket.hpp"
 
 class ServerTCPSocket : public TCPSocket {
 public:

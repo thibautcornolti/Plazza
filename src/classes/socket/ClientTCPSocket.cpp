@@ -6,11 +6,6 @@
 */
 
 #include "ClientTCPSocket.hpp"
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <string.h>
 
 ClientTCPSocket::ClientTCPSocket() : TCPSocket()
 {

@@ -6,11 +6,6 @@
 */
 
 #include "Slave.hpp"
-#include <functional>
-#include <map>
-#include <regex>
-#include <signal.h>
-#include <sstream>
 
 Plazza::Slave::Slave(size_t id, unsigned workerCount,
 	const std::string &loggerName, const std::function<void(void)> &atFork)
