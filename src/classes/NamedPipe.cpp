@@ -81,7 +81,7 @@ std::string NamedPipe::receive()
 	while (strchr(_buffer.c_str(), '\n') == 0) {
 		int size = ::read(_fd, buffer, 1);
 		if (size == -1)
-			printf("errno: %d\n", errno);
+			dprintf(2, "errno: %d\n", errno);
 		else if (size == 0)
 			throw std::exception();
 		buffer[size] = 0;
