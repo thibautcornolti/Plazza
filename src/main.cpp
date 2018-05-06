@@ -5,19 +5,12 @@
 ** plazza
 */
 
-#include "classes/Parser.hpp"
-#include "classes/Slave.hpp"
-#include "classes/SlavePool.hpp"
-#include "classes/Task.hpp"
-#include "classes/UserInterface.hpp"
-#include "classes/Worker.hpp"
-#include "classes/WorkerOutputHandler.hpp"
-#include "classes/socket/ClientTCPSocket.hpp"
-#include "classes/socket/ClientUnixSocket.hpp"
-#include <chrono>
-#include <functional>
 #include <iostream>
-#include <thread>
+
+#include "classes/Parser.hpp"
+#include "classes/SlavePool.hpp"
+#include "classes/UserInterface.hpp"
+#include "classes/WorkerOutputHandler.hpp"
 
 static void atFork(Plazza::WorkerOutputHandler *output)
 {
