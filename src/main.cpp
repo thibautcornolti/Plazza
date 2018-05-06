@@ -30,7 +30,10 @@ void run(int nb, bool tty)
 		auto task = p.getNextTask();
 		if (task.getType() == Plazza::Task::Type::EXIT)
 			break;
-		pool.pushTask(task);
+		else if (task.getType() == Plazza::Task::Type::NOOP)
+			dprintf(2, "Bad command\n");
+		else
+			pool.pushTask(task);
 	}
 	if (tty) {
 		dprintf(2, "Exiting...\n");

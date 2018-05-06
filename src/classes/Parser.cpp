@@ -61,7 +61,8 @@ Plazza::Task Plazza::Parser::parseNextCommand(
 		for (auto &elem : v)
 			_fileBuffer.push_back(elem);
 		task = Plazza::Parser::getNextTask();
-	}
+	} else
+		task.setType(Plazza::Task::NOOP);
 	return task;
 }
 
