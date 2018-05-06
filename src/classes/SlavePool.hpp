@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <functional>
 #include <memory>
+#include <thread>
 
 #include "Slave.hpp"
 #include "TaskPusherizer.hpp"
@@ -23,7 +24,7 @@ namespace Plazza {
 
 		void pushTask(Task);
 		void createSlave();
-		Slave &getBestSlave();
+		std::pair<std::unique_ptr<Slave>, std::time_t> &getBestSlave();
 		unsigned getLoad();
 		std::vector<std::vector<size_t>> getSummaryLoad();
 		std::vector<std::vector<Plazza::Task>> getSummaryTask();
@@ -31,10 +32,17 @@ namespace Plazza {
 
 	protected:
 	private:
+		void _timeoutHandler();
+		void _timeoutExitSlave(
+			std::pair<std::unique_ptr<Slave>, std::time_t> &);
+
 		int _socket;
 		unsigned _workerCount;
-		std::vector<std::unique_ptr<Slave>> _slaves;
+		std::vector<std::pair<std::unique_ptr<Slave>, std::time_t>>
+			_slaves;
 		std::string _loggerName;
 		std::function<void(void)> _atFork;
+		std::thread _timeoutThread;
+		bool _hasToStop;
 	};
 };
